@@ -1,6 +1,6 @@
 # genome-loom
 
-genome-loom creates comparative genome ribbon plots that show how a reference genome aligns with multiple comparison genomes across overview, pairwise, and neighbor-chain views. A supplied reference genome stays at the top of the stack, comparison genomes stay in the input order, and the figure set changes only which ribbon layer is visible. `genome-loom` does not reorder genomes, reorder contigs, or flip contigs, so the native coordinate system remains honest and reproducible.
+genome-loom creates comparative genome ribbon plots that show how a reference genome aligns with multiple comparison genomes across overview, pairwise, and neighbor-chain views. The reference remains at the top of the stack, comparison genomes remain in input order, and the figure set changes only which ribbon layer is visible. `genome-loom` preserves genome order, contig order, and contig orientation.
 
 | Overview | Reference Pair | All Pairs | Neighbor Chain |
 | :-: | :-: | :-: | :-: |
