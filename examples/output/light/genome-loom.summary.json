@@ -1,7 +1,7 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-04-16T16:05:10.924301+00:00",
+  "generated": "2026-04-16T18:43:23.384754+00:00",
   "version": "0.2.0",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/data/reference.fasta",
@@ -62,7 +62,7 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -106,7 +106,7 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -150,7 +150,7 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -194,7 +194,7 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -238,7 +238,7 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -282,7 +282,7 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -326,7 +326,7 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -370,7 +370,7 @@
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -414,7 +414,7 @@
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -458,7 +458,7 @@
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       },
       {
@@ -506,7 +506,7 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-propagated"
+          "comparison_contig_coloring": "reference-based"
         }
       }
     ]

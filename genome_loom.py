@@ -374,6 +374,7 @@ def _render_one(
     dpi: int,
     title: str | None,
     theme: str,
+    actual_reference: Genome | None = None,
 ) -> dict:
     from scripts.render import render_loom
 
@@ -393,6 +394,7 @@ def _render_one(
         color_intervals=color_intervals,
         full_color_genomes=full_color_genomes,
         legend_genome=legend_genome,
+        actual_reference=actual_reference,
     )
 
 
@@ -729,6 +731,7 @@ def main(argv: list[str] | None = None) -> int:
                 dpi=args.dpi,
                 title=args.title or f"{reference.name} vs all comparisons",
                 theme=args.theme,
+                actual_reference=reference,
             )
             record("overview", args.output, meta, reference, comparison_genomes)
         else:
@@ -755,6 +758,7 @@ def main(argv: list[str] | None = None) -> int:
                     dpi=args.dpi,
                     title=args.title or f"{reference.name} vs all comparisons",
                     theme=args.theme,
+                    actual_reference=reference,
                 )
                 record("overview", output, meta, reference, comparison_genomes)
 
@@ -785,6 +789,7 @@ def main(argv: list[str] | None = None) -> int:
                         dpi=args.dpi,
                         title=f"{reference.name} vs {genome.name}",
                         theme=args.theme,
+                        actual_reference=reference,
                     )
                     record("reference-pairs", output, meta, reference, [genome])
 
@@ -818,6 +823,7 @@ def main(argv: list[str] | None = None) -> int:
                             dpi=args.dpi,
                             title=f"{subject.name} vs {comp.name}",
                             theme=args.theme,
+                            actual_reference=reference,
                         )
                     else:
                         layers = [make_layer(a_path, b_path)]
@@ -837,6 +843,7 @@ def main(argv: list[str] | None = None) -> int:
                             dpi=args.dpi,
                             title=f"{subject.name} vs {comp.name}",
                             theme=args.theme,
+                            actual_reference=reference,
                         )
                     record("all-pairs", output, meta, subject, [comp])
 
@@ -864,6 +871,7 @@ def main(argv: list[str] | None = None) -> int:
                     dpi=args.dpi,
                     title="Neighbor chain",
                     theme=args.theme,
+                    actual_reference=reference,
                 )
                 record("neighbor", output, meta, reference, ordered_genomes[1:])
 

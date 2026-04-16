@@ -338,6 +338,7 @@ def render_loom(
     color_intervals: dict[str, dict[str, list[ColorInterval]]] | None = None,
     full_color_genomes: set[str] | None = None,
     legend_genome: Genome | None = None,
+    actual_reference: Genome | None = None,
 ) -> dict:
     """Render a stacked subject-to-comparison ribbon plot."""
     theme = THEMES.get(theme_name)
@@ -362,6 +363,8 @@ def render_loom(
         full_color_genomes = {layer.subject.name for layer in ribbon_layers}
     if color_intervals is None:
         color_intervals = {}
+    if actual_reference is None:
+        actual_reference = reference
 
     max_len = max(g.length for g in genomes)
     gap_bp = max(1_000, int(max_len * 0.008))
@@ -373,7 +376,9 @@ def render_loom(
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    row_labels = {genome.name: _row_label(genome, reference) for genome in genomes}
+    row_labels = {
+        genome.name: _row_label(genome, actual_reference) for genome in genomes
+    }
     longest_genome_label = max(len(label) for label in row_labels.values())
     label_size = max(7.0, min(16.0, height * 0.95, 82.0 / row_count))
     font_size = max(6.5, min(13.0, height * 0.82))
@@ -453,7 +458,7 @@ def render_loom(
     scale_band_h = scale_label_h + 0.045
     note_text = (
         "Reference-based colors propagated from "
-        f"{_shorten(_display_name(reference), 28)} to comparison contigs using sequence alignments."
+        f"{_shorten(_display_name(actual_reference), 28)} to comparison contigs using sequence alignments."
     )
     note_h = (font_size / 72.0 / height) * 1.25 if color_intervals else 0.0
     note_gap = 0.010 if color_intervals else 0.0

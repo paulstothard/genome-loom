@@ -63,7 +63,7 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   "${EXAMPLES_DIR}/case_studies/ecoli_complete_reference/comparisons/GCF_001900355_1.fasta" \
   --outdir "${OUT_DIR}/ecoli_complete_reference" \
   --summary-output "${OUT_DIR}/ecoli_complete_reference/genome-loom.summary.json" \
-  --views overview reference-pairs neighbor \
+  --views overview reference-pairs all-pairs neighbor \
   --format png \
   --theme light \
   --width 13 \
@@ -83,7 +83,7 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   "${EXAMPLES_DIR}/case_studies/fragmented_reference/comparisons/GCF_002854065_1.fasta" \
   --outdir "${OUT_DIR}/fragmented_reference" \
   --summary-output "${OUT_DIR}/fragmented_reference/genome-loom.summary.json" \
-  --views overview reference-pairs neighbor \
+  --views overview reference-pairs all-pairs neighbor \
   --format png \
   --theme light \
   --width 13 \
