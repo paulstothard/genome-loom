@@ -11,6 +11,7 @@ genome-loom creates comparative genome ribbon plots that show how a reference ge
 - `all-pairs`: one two-row figure per genome pair, showing only the two genomes involved in that selected comparison.
 - `neighbor`: one full-stack figure showing ribbons only between adjacent rows in the supplied genome order.
 - Comparison contigs are painted from their relationship to the reference, so the same reference-based color context can carry across the full figure set, including pairwise views where the reference row is not shown.
+- Ribbon color follows the upper genome in each join: when the reference is the upper genome, ribbons use the reference contig color in that aligned region; when a non-reference genome is the upper genome, ribbons use that genome's reference-based painted color in the aligned region, or fall back to the neutral comparison color if no reference-based paint is present there.
 
 ## Installation
 

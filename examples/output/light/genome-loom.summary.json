@@ -1,8 +1,8 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-04-16T18:43:23.384754+00:00",
-  "version": "0.2.0",
+  "generated": "2026-04-16T19:57:45.376344+00:00",
+  "version": "0.2.1",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/data/reference.fasta",
     "comparisons": [
@@ -46,6 +46,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -62,7 +63,11 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
+          }
         }
       },
       {
@@ -92,6 +97,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -106,7 +112,11 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
+          }
         }
       },
       {
@@ -136,6 +146,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -150,7 +161,11 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
+          }
         }
       },
       {
@@ -180,6 +195,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -194,7 +210,11 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
+          }
         }
       },
       {
@@ -224,6 +244,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -238,7 +259,11 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
+          }
         }
       },
       {
@@ -268,6 +293,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -282,7 +308,11 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
+          }
         }
       },
       {
@@ -312,6 +342,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -326,7 +357,11 @@
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
+          }
         }
       },
       {
@@ -356,6 +391,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "comparison_alpha"
           ],
@@ -370,7 +406,11 @@
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use the upper genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when that upper region has no reference-based paint."
+          }
         }
       },
       {
@@ -400,6 +440,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "comparison_alpha"
           ],
@@ -414,7 +455,11 @@
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use the upper genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when that upper region has no reference-based paint."
+          }
         }
       },
       {
@@ -444,6 +489,7 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "comparison_beta"
           ],
@@ -458,7 +504,11 @@
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use the upper genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when that upper region has no reference-based paint."
+          }
         }
       },
       {
@@ -479,6 +529,22 @@
               "contig_4": "#CC79A7",
               "contig_5": "#C9B000",
               "contig_6": "#56B4E9"
+            },
+            "comparison_alpha": {
+              "comparison_alpha_1_contig_1_+": "#0072B2",
+              "comparison_alpha_2_contig_2_+": "#D55E00",
+              "comparison_alpha_3_contig_3_-": "#009E73",
+              "comparison_alpha_4_contig_4_+": "#CC79A7",
+              "comparison_alpha_5_contig_5_+": "#C9B000",
+              "comparison_alpha_6_contig_6_-": "#56B4E9"
+            },
+            "comparison_beta": {
+              "comparison_beta_2_contig_1_+": "#0072B2",
+              "comparison_beta_1_contig_2_+": "#D55E00",
+              "comparison_beta_4_contig_3_+": "#009E73",
+              "comparison_beta_3_contig_4_-": "#CC79A7",
+              "comparison_beta_6_contig_5_-": "#C9B000",
+              "comparison_beta_5_contig_6_+": "#56B4E9"
             }
           },
           "legend_contig_colors": {
@@ -490,8 +556,11 @@
             "contig_6": "#56B4E9"
           },
           "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
-            "reference"
+            "reference",
+            "comparison_alpha",
+            "comparison_beta"
           ],
           "distinct_subject_contig_colors": 6,
           "fallback_subject_contigs": 0,
@@ -504,9 +573,13 @@
             "comparison_gamma"
           ],
           "theme": "light",
-          "thread_mode": "reference-flow",
+          "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based"
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use the upper genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when that upper region has no reference-based paint."
+          }
         }
       }
     ]
@@ -540,6 +613,10 @@
   "alignment": {
     "tool": "minimap2",
     "preset": "asm5"
+  },
+  "coloring_explanation": {
+    "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+    "ribbons": "When the true reference is the upper genome in a join, ribbons use the reference contig color in that aligned region. When a non-reference genome is the upper genome, ribbons use that genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when no reference-based paint is present there."
   },
   "ordering": {
     "method": "input",

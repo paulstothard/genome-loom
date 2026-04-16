@@ -213,6 +213,24 @@ def _has_intervals(
     return any(intervals.get(genome_name, {}).values())
 
 
+def _dominant_interval_color(
+    intervals: dict[str, dict[str, list[ColorInterval]]],
+    genome_name: str,
+    contig_name: str,
+    start: int,
+    end: int,
+) -> str | None:
+    candidates = intervals.get(genome_name, {}).get(contig_name, [])
+    best: tuple[int, str] | None = None
+    for interval in candidates:
+        overlap = max(0, min(end, interval.end) - max(start, interval.start))
+        if overlap <= 0:
+            continue
+        if best is None or overlap > best[0]:
+            best = (overlap, interval.color)
+    return best[1] if best else None
+
+
 def _mix_colors(color_a: str, color_b: str, frac_b: float) -> str:
     frac_b = min(max(frac_b, 0.0), 1.0)
     frac_a = 1.0 - frac_b
@@ -571,7 +589,18 @@ def render_loom(
                 cx2 = _pos_to_x(comp_layout, block.comparison_end)
                 if block.strand == "-":
                     cx1, cx2 = cx2, cx1
-                color = colors.get(block.reference_contig, theme.fallback_contig)
+                color = _dominant_interval_color(
+                    color_intervals,
+                    subject.name,
+                    block.reference_contig,
+                    block.reference_start,
+                    block.reference_end,
+                )
+                if color is None:
+                    if subject.name in full_color_genomes:
+                        color = colors.get(block.reference_contig, theme.fallback_contig)
+                    else:
+                        color = theme.comparison_fill
                 ribbon_items.append(
                     (
                         _ribbon_sort_key(rx1, rx2, cx1, cx2),
@@ -737,6 +766,7 @@ def render_loom(
         "subject_contig_colors": subject_colors,
         "legend_contig_colors": legend_colors,
         "legend_subject": legend_subject.name,
+        "legend_note": note_text if color_intervals else None,
         "colored_subjects": [s.name for s in subjects],
         "distinct_subject_contig_colors": distinct_color_count,
         "fallback_subject_contigs": fallback_count,
@@ -751,4 +781,16 @@ def render_loom(
         "comparison_contig_coloring": (
             "reference-based" if color_intervals else "neutral"
         ),
+        "coloring_explanation": {
+            "comparison_contigs": (
+                "Comparison contigs are painted from their relationship to the true project reference."
+                if color_intervals
+                else "Comparison contigs use the neutral comparison color."
+            ),
+            "ribbons": (
+                "Ribbons use the upper genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when that upper region has no reference-based paint."
+                if ribbon_segments is None
+                else "Ribbons use reference-flow coloring propagated from the true project reference."
+            ),
+        },
     }

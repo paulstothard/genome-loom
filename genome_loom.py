@@ -16,7 +16,7 @@ from scripts.fasta import Genome, cap_contig_blocks, read_fasta, write_fasta
 from scripts.summary import write_summary
 
 
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 VIEW_CHOICES = ("overview", "reference-pairs", "all-pairs", "neighbor")
 MINIMAP2_PRESETS = ("asm5", "asm10", "asm20")
 FULL_STACK_VIEWS = {"overview", "neighbor"}
@@ -850,18 +850,19 @@ def main(argv: list[str] | None = None) -> int:
             if "neighbor" in selected:
                 view_dir = outdir / "neighbor"
                 output = view_dir / f"neighbor-chain.{ext}"
-                _global_segments, global_intervals = global_reference_flow()
-                segments, intervals = build_reference_flow(
-                    list(zip(ordered_paths, ordered_paths[1:])),
-                    base_intervals=global_intervals,
-                )
+                _global_segments, intervals = global_reference_flow()
+                layers = [
+                    make_layer(subject_path, comparison_path)
+                    for subject_path, comparison_path in zip(
+                        ordered_paths, ordered_paths[1:]
+                    )
+                ]
                 meta = _render_one(
                     subject=reference,
                     comparisons=comparison_genomes,
                     alignments={},
                     context_genomes=ordered_genomes,
-                    ribbon_layers=[],
-                    ribbon_segments=segments,
+                    ribbon_layers=layers,
                     color_intervals=intervals,
                     full_color_genomes={reference.name},
                     legend_genome=reference,
@@ -918,6 +919,16 @@ def main(argv: list[str] | None = None) -> int:
                 "alignment": {
                     "tool": "minimap2",
                     "preset": args.minimap_preset,
+                },
+                "coloring_explanation": {
+                    "comparison_contigs": (
+                        "Comparison contigs are painted from their relationship to the true project reference."
+                    ),
+                    "ribbons": (
+                        "When the true reference is the upper genome in a join, ribbons use the reference contig color in that aligned region. "
+                        "When a non-reference genome is the upper genome, ribbons use that genome's reference-based painted color in the aligned region, "
+                        "and fall back to the neutral comparison color when no reference-based paint is present there."
+                    ),
                 },
                 "ordering": {
                     "method": "input",
