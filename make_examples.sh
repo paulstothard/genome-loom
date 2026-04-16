@@ -12,15 +12,15 @@ mkdir -p "${DATA_DIR}" "${OUT_DIR}"
 "${PYTHON[@]}" scripts/make_demo_data.py --out-dir "${DATA_DIR}"
 
 rm -rf "${OUT_DIR}/light" "${OUT_DIR}/dark"
-rm -rf "${OUT_DIR}/ecoli_real"
-rm -rf "${OUT_DIR}/most_contigs"
+rm -rf "${OUT_DIR}/ecoli_complete_reference"
+rm -rf "${OUT_DIR}/fragmented_reference"
 
 "${PYTHON[@]}" genome_loom.py \
   --reference "${DATA_DIR}/reference.fasta" \
   --comparisons \
-    "${DATA_DIR}/comparison_alpha.fasta" \
-    "${DATA_DIR}/comparison_beta.fasta" \
-    "${DATA_DIR}/comparison_gamma.fasta" \
+  "${DATA_DIR}/comparison_alpha.fasta" \
+  "${DATA_DIR}/comparison_beta.fasta" \
+  "${DATA_DIR}/comparison_gamma.fasta" \
   --outdir "${OUT_DIR}/light" \
   --summary-output "${OUT_DIR}/light/genome-loom.summary.json" \
   --views overview reference-pairs all-pairs neighbor \
@@ -38,9 +38,9 @@ rm -rf "${OUT_DIR}/most_contigs"
 "${PYTHON[@]}" genome_loom.py \
   --reference "${DATA_DIR}/reference.fasta" \
   --comparisons \
-    "${DATA_DIR}/comparison_alpha.fasta" \
-    "${DATA_DIR}/comparison_beta.fasta" \
-    "${DATA_DIR}/comparison_gamma.fasta" \
+  "${DATA_DIR}/comparison_alpha.fasta" \
+  "${DATA_DIR}/comparison_beta.fasta" \
+  "${DATA_DIR}/comparison_gamma.fasta" \
   --outdir "${OUT_DIR}/dark" \
   --summary-output "${OUT_DIR}/dark/genome-loom.summary.json" \
   --views overview reference-pairs neighbor \
@@ -56,13 +56,13 @@ rm -rf "${OUT_DIR}/most_contigs"
   --title "Genome Loom Demo"
 
 "${PYTHON[@]}" genome_loom.py \
-  --reference "${EXAMPLES_DIR}/real_data/ecoli/reference.fasta" \
+  --reference "${EXAMPLES_DIR}/case_studies/ecoli_complete_reference/reference.fasta" \
   --comparisons \
-    "${EXAMPLES_DIR}/real_data/ecoli/comparisons/GCF_003073835_1.fasta" \
-    "${EXAMPLES_DIR}/real_data/ecoli/comparisons/GCF_002854065_1.fasta" \
-    "${EXAMPLES_DIR}/real_data/ecoli/comparisons/GCF_001900355_1.fasta" \
-  --outdir "${OUT_DIR}/ecoli_real" \
-  --summary-output "${OUT_DIR}/ecoli_real/genome-loom.summary.json" \
+  "${EXAMPLES_DIR}/case_studies/ecoli_complete_reference/comparisons/GCF_003073835_1.fasta" \
+  "${EXAMPLES_DIR}/case_studies/ecoli_complete_reference/comparisons/GCF_002854065_1.fasta" \
+  "${EXAMPLES_DIR}/case_studies/ecoli_complete_reference/comparisons/GCF_001900355_1.fasta" \
+  --outdir "${OUT_DIR}/ecoli_complete_reference" \
+  --summary-output "${OUT_DIR}/ecoli_complete_reference/genome-loom.summary.json" \
   --views overview reference-pairs neighbor \
   --format png \
   --theme light \
@@ -76,13 +76,13 @@ rm -rf "${OUT_DIR}/most_contigs"
   --title "Real E. coli Example"
 
 "${PYTHON[@]}" genome_loom.py \
-  --reference "${EXAMPLES_DIR}/real_data/most_contigs/reference.fasta" \
+  --reference "${EXAMPLES_DIR}/case_studies/fragmented_reference/reference.fasta" \
   --comparisons \
-    "${EXAMPLES_DIR}/real_data/most_contigs/comparisons/GCF_002589795_1.fasta" \
-    "${EXAMPLES_DIR}/real_data/most_contigs/comparisons/GCF_002011945_1.fasta" \
-    "${EXAMPLES_DIR}/real_data/most_contigs/comparisons/GCF_002854065_1.fasta" \
-  --outdir "${OUT_DIR}/most_contigs" \
-  --summary-output "${OUT_DIR}/most_contigs/genome-loom.summary.json" \
+  "${EXAMPLES_DIR}/case_studies/fragmented_reference/comparisons/GCF_002589795_1.fasta" \
+  "${EXAMPLES_DIR}/case_studies/fragmented_reference/comparisons/GCF_002011945_1.fasta" \
+  "${EXAMPLES_DIR}/case_studies/fragmented_reference/comparisons/GCF_002854065_1.fasta" \
+  --outdir "${OUT_DIR}/fragmented_reference" \
+  --summary-output "${OUT_DIR}/fragmented_reference/genome-loom.summary.json" \
   --views overview reference-pairs neighbor \
   --format png \
   --theme light \
@@ -95,4 +95,4 @@ rm -rf "${OUT_DIR}/most_contigs"
   --threads 2 \
   --title "Most-Contig Local Example"
 
-echo "Examples written to ${OUT_DIR}/light, ${OUT_DIR}/dark, ${OUT_DIR}/ecoli_real, and ${OUT_DIR}/most_contigs"
+echo "Examples written to ${OUT_DIR}/light, ${OUT_DIR}/dark, ${OUT_DIR}/ecoli_complete_reference, and ${OUT_DIR}/fragmented_reference"

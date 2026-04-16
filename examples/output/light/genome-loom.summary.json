@@ -1,7 +1,7 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-04-16T15:55:33.682079+00:00",
+  "generated": "2026-04-16T16:05:10.924301+00:00",
   "version": "0.2.0",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/data/reference.fasta",
@@ -553,6 +553,7 @@
   "genomes": [
     {
       "name": "reference",
+      "display_name": "reference",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/data/reference.fasta",
       "length_bp": 174000,
       "contig_count": 6,
@@ -598,6 +599,7 @@
     },
     {
       "name": "comparison_alpha",
+      "display_name": "comparison_alpha",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/data/comparison_alpha.fasta",
       "length_bp": 174000,
       "contig_count": 6,
@@ -643,6 +645,7 @@
     },
     {
       "name": "comparison_beta",
+      "display_name": "comparison_beta",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/data/comparison_beta.fasta",
       "length_bp": 174000,
       "contig_count": 6,
@@ -688,6 +691,7 @@
     },
     {
       "name": "comparison_gamma",
+      "display_name": "comparison_gamma",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/data/comparison_gamma.fasta",
       "length_bp": 157000,
       "contig_count": 5,

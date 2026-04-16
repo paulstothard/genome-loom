@@ -1,25 +1,25 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-04-16T15:55:46.276375+00:00",
+  "generated": "2026-04-16T16:05:25.060162+00:00",
   "version": "0.2.0",
   "inputs": {
-    "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/reference.fasta",
+    "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/reference.fasta",
     "comparisons": [
-      "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002589795_1.fasta",
-      "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002011945_1.fasta",
-      "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002854065_1.fasta"
+      "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002589795_1.fasta",
+      "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002011945_1.fasta",
+      "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002854065_1.fasta"
     ]
   },
   "outputs": {
-    "outdir": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs",
+    "outdir": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference",
     "output": null,
-    "summary_json": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/genome-loom.summary.json",
+    "summary_json": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/genome-loom.summary.json",
     "work_dir": null,
     "figures": [
       {
         "view": "overview",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/overview/reference-vs-all.png",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/overview/reference-vs-all.png",
         "subject": "reference",
         "comparisons": [
           "GCF_002589795_1",
@@ -67,7 +67,7 @@
       },
       {
         "view": "reference-pairs",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/reference_pairs/reference-vs-GCF_002589795_1.png",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/reference_pairs/reference-vs-GCF_002589795_1.png",
         "subject": "reference",
         "comparisons": [
           "GCF_002589795_1"
@@ -111,7 +111,7 @@
       },
       {
         "view": "reference-pairs",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/reference_pairs/reference-vs-GCF_002011945_1.png",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/reference_pairs/reference-vs-GCF_002011945_1.png",
         "subject": "reference",
         "comparisons": [
           "GCF_002011945_1"
@@ -155,7 +155,7 @@
       },
       {
         "view": "reference-pairs",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/reference_pairs/reference-vs-GCF_002854065_1.png",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/reference_pairs/reference-vs-GCF_002854065_1.png",
         "subject": "reference",
         "comparisons": [
           "GCF_002854065_1"
@@ -199,7 +199,7 @@
       },
       {
         "view": "neighbor",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/neighbor/neighbor-chain.png",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/neighbor/neighbor-chain.png",
         "subject": "reference",
         "comparisons": [
           "GCF_002589795_1",
@@ -288,7 +288,8 @@
   "genomes": [
     {
       "name": "reference",
-      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/reference.fasta",
+      "display_name": "reference",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/reference.fasta",
       "length_bp": 5326972,
       "contig_count": 6,
       "remainder_contig_count": 8,
@@ -333,7 +334,8 @@
     },
     {
       "name": "GCF_002589795_1",
-      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002589795_1.fasta",
+      "display_name": "GCF_002589795_1",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002589795_1.fasta",
       "length_bp": 5122356,
       "contig_count": 6,
       "remainder_contig_count": 6,
@@ -378,7 +380,8 @@
     },
     {
       "name": "GCF_002011945_1",
-      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002011945_1.fasta",
+      "display_name": "GCF_002011945_1",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002011945_1.fasta",
       "length_bp": 5223396,
       "contig_count": 6,
       "remainder_contig_count": 4,
@@ -423,7 +426,8 @@
     },
     {
       "name": "GCF_002854065_1",
-      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002854065_1.fasta",
+      "display_name": "GCF_002854065_1",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002854065_1.fasta",
       "length_bp": 5212044,
       "contig_count": 6,
       "remainder_contig_count": 3,

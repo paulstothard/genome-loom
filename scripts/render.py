@@ -146,6 +146,17 @@ def _shorten(text: str, max_chars: int) -> str:
     return text[: max(1, max_chars - 1)] + "…"
 
 
+def _display_name(genome: Genome) -> str:
+    return (genome.display_name or genome.name).replace("_", " ")
+
+
+def _row_label(genome: Genome, reference: Genome) -> str:
+    label = _display_name(genome)
+    if genome.name == reference.name:
+        return f"reference | {label}"
+    return label
+
+
 def _text_width_frac(text: str, fontsize_pts: float, width_in: float) -> float:
     """Estimate text width in axis-fraction units.
 
@@ -187,14 +198,18 @@ def _ranked_contigs_by_size(genome: Genome):
 def _contig_colors_by_size(genome: Genome, fallback_color: str) -> dict[str, str]:
     colors: dict[str, str] = {}
     for rank, (_original_index, contig) in enumerate(_ranked_contigs_by_size(genome)):
-        colors[contig.name] = DEFAULT_COLORS[rank] if rank < len(DEFAULT_COLORS) else fallback_color
+        colors[contig.name] = (
+            DEFAULT_COLORS[rank] if rank < len(DEFAULT_COLORS) else fallback_color
+        )
     for contig in genome.contigs:
         if contig.is_remainder:
             colors[contig.name] = fallback_color
     return colors
 
 
-def _has_intervals(intervals: dict[str, dict[str, list[ColorInterval]]], genome_name: str) -> bool:
+def _has_intervals(
+    intervals: dict[str, dict[str, list[ColorInterval]]], genome_name: str
+) -> bool:
     return any(intervals.get(genome_name, {}).values())
 
 
@@ -209,12 +224,20 @@ def _mix_colors(color_a: str, color_b: str, frac_b: float) -> str:
     )
 
 
-def _ribbon_sort_key(top_left: float, top_right: float, bottom_left: float, bottom_right: float):
+def _ribbon_sort_key(
+    top_left: float, top_right: float, bottom_left: float, bottom_right: float
+):
     top_span = abs(top_right - top_left)
     bottom_span = abs(bottom_right - bottom_left)
     avg_span = (top_span + bottom_span) / 2
-    center_shift = abs(((top_left + top_right) / 2) - ((bottom_left + bottom_right) / 2))
-    return (-avg_span, -center_shift, min(top_left, top_right, bottom_left, bottom_right))
+    center_shift = abs(
+        ((top_left + top_right) / 2) - ((bottom_left + bottom_right) / 2)
+    )
+    return (
+        -avg_span,
+        -center_shift,
+        min(top_left, top_right, bottom_left, bottom_right),
+    )
 
 
 def _layout_genome(
@@ -319,9 +342,13 @@ def render_loom(
     """Render a stacked subject-to-comparison ribbon plot."""
     theme = THEMES.get(theme_name)
     if theme is None:
-        raise ValueError(f"Unknown theme '{theme_name}'. Choose from: {', '.join(THEMES)}")
+        raise ValueError(
+            f"Unknown theme '{theme_name}'. Choose from: {', '.join(THEMES)}"
+        )
 
-    genomes = context_genomes if context_genomes is not None else [reference, *comparisons]
+    genomes = (
+        context_genomes if context_genomes is not None else [reference, *comparisons]
+    )
     row_count = len(genomes)
     if row_count < 2:
         raise ValueError("At least one comparison genome is required")
@@ -346,12 +373,16 @@ def render_loom(
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    longest_genome_label = max(len(g.name.replace("_", " ")) for g in genomes)
+    row_labels = {genome.name: _row_label(genome, reference) for genome in genomes}
+    longest_genome_label = max(len(label) for label in row_labels.values())
     label_size = max(7.0, min(16.0, height * 0.95, 82.0 / row_count))
     font_size = max(6.5, min(13.0, height * 0.82))
     left_label = max(
         0.16,
-        min(0.30, 0.035 + _text_width_frac("M" * longest_genome_label, label_size, width)),
+        min(
+            0.30,
+            0.035 + _text_width_frac("M" * longest_genome_label, label_size, width),
+        ),
     )
     right_pad = 0.05
     plot_left = left_label
@@ -373,7 +404,9 @@ def render_loom(
 
     subject_colors: dict[str, dict[str, str]] = {}
     for subject in subjects:
-        subject_colors[subject.name] = _contig_colors_by_size(subject, theme.fallback_contig)
+        subject_colors[subject.name] = _contig_colors_by_size(
+            subject, theme.fallback_contig
+        )
 
     legend_subject = legend_genome or subjects[0]
     if legend_genome is None and color_intervals:
@@ -392,9 +425,7 @@ def render_loom(
     ]
     overflow_count = max(0, len(ranked_legend_contigs) - distinct_color_count)
     remainder_count = sum(
-        contig.source_count
-        for contig in legend_subject.contigs
-        if contig.is_remainder
+        contig.source_count for contig in legend_subject.contigs if contig.is_remainder
     )
     fallback_count = overflow_count + remainder_count
     if fallback_count:
@@ -420,7 +451,10 @@ def render_loom(
     legend_y0 = bottom_pad
     scale_label_h = (font_size / 72.0 / height) * 1.25
     scale_band_h = scale_label_h + 0.045
-    note_text = "Reference colors propagated to comparison contigs using sequence alignments."
+    note_text = (
+        "Reference-derived colors propagated from "
+        f"{_shorten(_display_name(reference), 28)} to comparison contigs using sequence alignments."
+    )
     note_h = (font_size / 72.0 / height) * 1.25 if color_intervals else 0.0
     note_gap = 0.010 if color_intervals else 0.0
     note_y = legend_y0 + legend_height + note_gap
@@ -449,14 +483,15 @@ def render_loom(
         genome.name: _layout_genome(genome, plot_left, plot_width, max_len, gap_bp)
         for genome in genomes
     }
-    row_y = {
-        genome.name: top - i * row_gap
-        for i, genome in enumerate(genomes)
-    }
+    row_y = {genome.name: top - i * row_gap for i, genome in enumerate(genomes)}
     scale_bp = _nice_scale_length(max_len)
     scale_w = (scale_bp / max_len) * plot_width
-    ribbon_edge_forward = mcolors.to_rgba(_mix_colors(theme.text, theme.background, 0.40), alpha=0.55)
-    ribbon_edge_reverse = mcolors.to_rgba(_mix_colors("#8b1e3f", theme.background, 0.20), alpha=0.70)
+    ribbon_edge_forward = mcolors.to_rgba(
+        _mix_colors(theme.text, theme.background, 0.40), alpha=0.55
+    )
+    ribbon_edge_reverse = mcolors.to_rgba(
+        _mix_colors("#8b1e3f", theme.background, 0.20), alpha=0.70
+    )
 
     # Ribbons first, so genome blocks and colored landing zones sit above them.
     if ribbon_segments is not None:
@@ -482,7 +517,9 @@ def render_loom(
                     cx2,
                 )
             )
-        for _sort_key, segment, rx1, rx2, cx1, cx2 in sorted(ribbon_items, key=lambda item: item[0]):
+        for _sort_key, segment, rx1, rx2, cx1, cx2 in sorted(
+            ribbon_items, key=lambda item: item[0]
+        ):
             path = _ribbon_path(
                 rx1,
                 rx2,
@@ -500,10 +537,14 @@ def render_loom(
                         alpha=theme.ribbon_alpha_forward,
                     ),
                     edgecolor=(
-                        ribbon_edge_forward
-                        if segment.strand == "+"
-                        else ribbon_edge_reverse
-                    ) if ENABLE_RIBBON_OUTLINES else "none",
+                        (
+                            ribbon_edge_forward
+                            if segment.strand == "+"
+                            else ribbon_edge_reverse
+                        )
+                        if ENABLE_RIBBON_OUTLINES
+                        else "none"
+                    ),
                     linewidth=0.72 if ENABLE_RIBBON_OUTLINES else 0.0,
                     zorder=1,
                 )
@@ -537,7 +578,9 @@ def render_loom(
                         cx2,
                     )
                 )
-            for _sort_key, block, color, rx1, rx2, cx1, cx2 in sorted(ribbon_items, key=lambda item: item[0]):
+            for _sort_key, block, color, rx1, rx2, cx1, cx2 in sorted(
+                ribbon_items, key=lambda item: item[0]
+            ):
                 path = _ribbon_path(
                     rx1,
                     rx2,
@@ -555,10 +598,14 @@ def render_loom(
                             alpha=theme.ribbon_alpha_forward,
                         ),
                         edgecolor=(
-                            ribbon_edge_forward
-                            if block.strand == "+"
-                            else ribbon_edge_reverse
-                        ) if ENABLE_RIBBON_OUTLINES else "none",
+                            (
+                                ribbon_edge_forward
+                                if block.strand == "+"
+                                else ribbon_edge_reverse
+                            )
+                            if ENABLE_RIBBON_OUTLINES
+                            else "none"
+                        ),
                         linewidth=0.72 if ENABLE_RIBBON_OUTLINES else 0.0,
                         zorder=1,
                     )
@@ -567,10 +614,14 @@ def render_loom(
     # Genome rows.
     for i, genome in enumerate(genomes):
         y = row_y[genome.name]
+        row_label = row_labels[genome.name]
+        max_label_chars = max(
+            14, int((left_label - 0.04) * width * 72 / (label_size * 0.56))
+        )
         ax.text(
             plot_left - 0.018,
             y,
-            genome.name.replace("_", " "),
+            _shorten(row_label, max_label_chars),
             ha="right",
             va="center",
             fontsize=label_size,
@@ -580,9 +631,15 @@ def render_loom(
         for contig in genome.contigs:
             layout = layouts[genome.name][contig.name]
             genome_colors = subject_colors.get(genome.name)
-            is_full_color = genome.name in full_color_genomes and genome_colors is not None
+            is_full_color = (
+                genome.name in full_color_genomes and genome_colors is not None
+            )
             has_propagated_color = _has_intervals(color_intervals, genome.name)
-            color = genome_colors.get(contig.name, theme.fallback_contig) if is_full_color else theme.comparison_fill
+            color = (
+                genome_colors.get(contig.name, theme.fallback_contig)
+                if is_full_color
+                else theme.comparison_fill
+            )
             edge = (
                 theme.subject_edge
                 if is_full_color or has_propagated_color
@@ -682,7 +739,11 @@ def render_loom(
         "scale_bar_bp": scale_bp,
         "row_order": [g.name for g in genomes],
         "theme": theme.name,
-        "thread_mode": "reference-flow" if ribbon_segments is not None else "subject-local",
+        "thread_mode": (
+            "reference-flow" if ribbon_segments is not None else "subject-local"
+        ),
         "color_assignment": "largest-contigs-first",
-        "comparison_contig_coloring": "reference-propagated" if color_intervals else "neutral",
+        "comparison_contig_coloring": (
+            "reference-propagated" if color_intervals else "neutral"
+        ),
     }

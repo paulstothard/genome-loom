@@ -1,10 +1,6 @@
 # genome-loom
 
-Generate coordinated genome ribbon figure sets from local FASTA files. A supplied
-reference genome stays at the top of the stack, comparison genomes stay in the
-input order, and the figure set changes only which ribbon layer is visible.
-`genome-loom` does not reorder genomes, reorder contigs, or flip contigs, so the
-native coordinate system remains honest and reproducible.
+Generate coordinated genome ribbon figure sets from local FASTA files. A supplied reference genome stays at the top of the stack, comparison genomes stay in the input order, and the figure set changes only which ribbon layer is visible. `genome-loom` does not reorder genomes, reorder contigs, or flip contigs, so the native coordinate system remains honest and reproducible.
 
 | Overview | Reference Pair | All Pairs | Neighbor Chain |
 | :-: | :-: | :-: | :-: |
@@ -25,8 +21,7 @@ cd genome-loom
 conda env create -f environment.yml
 ```
 
-This installs Python, matplotlib, Biopython, minimap2, and the other required
-packages into a self-contained `genome-loom` environment.
+This installs Python, matplotlib, Biopython, minimap2, and the other required packages into a self-contained `genome-loom` environment.
 
 ### 3. Verify
 
@@ -63,8 +58,7 @@ results/
     neighbor-chain.png
 ```
 
-`--output one-plot.png` is still available as a compatibility shortcut for a
-single overview image, but `--outdir` is the preferred workflow.
+`--output one-plot.png` is still available as a compatibility shortcut for a single overview image, but `--outdir` is the preferred workflow.
 
 ## Figure Views
 
@@ -73,16 +67,11 @@ single overview image, but `--outdir` is the preferred workflow.
 - `all-pairs`: one two-row figure per selected genome pair.
 - `neighbor`: one full-stack neighbor-chain figure with ribbons between adjacent rows.
 
-The two pairwise view families are intentionally easier to read: each image
-shows only the two genomes involved in that selected comparison, which creates
-more vertical separation between rows and makes ribbon geometry easier to
-interpret than in the full stacked views.
+The two pairwise view families are intentionally easier to read: each image shows only the two genomes involved in that selected comparison, which creates more vertical separation between rows and makes ribbon geometry easier to interpret than in the full stacked views.
 
 ## Using Your Own FASTA Files
 
-`genome_loom.py` is the main single-entry script. It is intended to behave like
-a predictable, non-interactive batch command for local use or for systems such
-as Proksee.
+`genome_loom.py` is the main single-entry script. It is intended to behave like a predictable, non-interactive batch command for local use or for systems such as Proksee.
 
 ```bash
 # Full figure set
@@ -102,6 +91,16 @@ python genome_loom.py \
   --width 14 --height 9 --dpi 300 \
   --title "Genome Loom Example"
 
+# Override display labels used in row labels and titles
+python genome_loom.py \
+  --reference ref.fasta \
+  --comparisons comparison_a.fasta comparison_b.fasta \
+  --outdir results \
+  --display-names \
+    "ref=NC_000913.3" \
+    "comparison_a=E. coli O157:H7" \
+    "comparison_b=E. coli CFT073"
+
 # Server-style run with explicit summary and work directory
 python genome_loom.py \
   --reference ref.fasta \
@@ -116,13 +115,13 @@ python genome_loom.py \
 python genome_loom.py --config run.json --outdir results --force
 ```
 
-Key options are summarized below; run `python genome_loom.py --help` for the
-full reference.
+Key options are summarized below; run `python genome_loom.py --help` for the full reference.
 
 | Option | Default | Description |
 | --- | --- | --- |
 | `--reference` | — | Reference genome FASTA (required) |
 | `--comparisons` | — | Comparison FASTAs: files and/or directories scanned one level deep for `.fa`, `.fasta`, `.fna`, or `.fas` files |
+| `--display-names` | — | Optional `KEY=LABEL` overrides keyed by FASTA stem or filename for figure labels and titles |
 | `--outdir` | — | Output directory for figure families and summary JSON |
 | `--output` | — | Compatibility shortcut for one overview image |
 | `--summary-output` | `outdir/genome-loom.summary.json` | Machine-readable JSON summary |
@@ -147,9 +146,7 @@ full reference.
 
 ## Server and Batch Use
 
-`genome_loom.py` is the preferred entry point for an analysis server. It
-requires explicit inputs, never prompts interactively, exits nonzero on failure,
-and writes a machine-readable JSON summary for the caller.
+`genome_loom.py` is the preferred entry point for an analysis server. It requires explicit inputs, never prompts interactively, exits nonzero on failure, and writes a machine-readable JSON summary for the caller.
 
 Example server-style command:
 
@@ -172,10 +169,7 @@ Practical recommendations for predictable server-side operation:
 - Use `--tmpdir` when temporary files should live on fast local scratch storage.
 - Use `--force` when re-running into an existing results directory or work directory.
 
-If `--work-dir` is omitted, `genome-loom` creates a temporary working directory.
-That directory is deleted after the run unless `--keep-temp` is used. If
-`--keep-temp` is supplied without `--work-dir`, the auto-created temporary work
-directory is kept and reported in the summary JSON.
+If `--work-dir` is omitted, `genome-loom` creates a temporary working directory. That directory is deleted after the run unless `--keep-temp` is used. If `--keep-temp` is supplied without `--work-dir`, the auto-created temporary work directory is kept and reported in the summary JSON.
 
 The JSON summary includes:
 
@@ -188,8 +182,7 @@ The JSON summary includes:
 - one record per computed pairwise alignment
 - warnings, such as likely crowding in full-stack views
 
-On failure, the summary still attempts to record the error type, message, and
-the output paths already known to the wrapper.
+On failure, the summary still attempts to record the error type, message, and the output paths already known to the wrapper.
 
 ### JSON Config Files
 
@@ -207,13 +200,11 @@ the output paths already known to the wrapper.
 }
 ```
 
-Command-line arguments override values loaded from the config file, so a caller
-can keep a stable base config and customize only a few fields per job.
+Command-line arguments override values loaded from the config file, so a caller can keep a stable base config and customize only a few fields per job.
 
 ## Alignment Settings
 
-`genome-loom` currently uses `minimap2` for all alignments. The main alignment
-mode option is the minimap2 preset:
+`genome-loom` currently uses `minimap2` for all alignments. The main alignment mode option is the minimap2 preset:
 
 - `--minimap-preset asm5`: strictest and usually best for very close assemblies or strain-level work.
 - `--minimap-preset asm10`: more tolerant when expected matches start to disappear.
@@ -233,31 +224,15 @@ Practical rule of thumb:
 
 ## Color Propagation and Figure Meaning
 
-For `overview`, `reference-pairs`, `neighbor`, and any `all-pairs` figure that
-includes the reference, ribbons use reference-flow colors. A reference contig
-color follows the aligned DNA into comparison rows, and comparison contig bars
-are painted where direct reference-alignment evidence indicates
-reference-derived sequence is present.
+For `overview`, `reference-pairs`, `neighbor`, and any `all-pairs` figure that includes the reference, ribbons use reference-flow colors. A reference contig color follows the aligned DNA into comparison rows, and comparison contig bars are painted where direct reference-alignment evidence indicates reference-derived sequence is present.
 
-That propagated comparison-contig coloring is global across the figure set, so
-it remains visible even when the current image is showing only one selected pair
-or a neighbor-chain ribbon layer. In `neighbor`, those colors can continue to
-percolate downward through adjacent comparisons.
+That propagated comparison-contig coloring is global across the figure set, so it remains visible even when the current image is showing only one selected pair or a neighbor-chain ribbon layer. In `neighbor`, those colors can continue to percolate downward through adjacent comparisons.
 
-For `all-pairs` images that do not include the reference, ribbons are colored
-locally from the upper genome in that selected pair because the ribbon itself no
-longer contains a direct reference thread. The comparison contig bars are still
-painted from direct reference evidence when available. The JSON render metadata
-records ribbon coloring as either `reference-flow` or `subject-local`, and
-comparison contig coloring as `reference-propagated` when global reference
-coloring is active.
+The figure row label for the top genome now reads `reference | <name>` so the viewer can see both the role and the actual identifier. In pairwise figures that do not show the reference row, the legend note still names the reference genome that supplied the propagated color context.
 
-Reference colors are assigned by contig size, not FASTA order. The largest
-reference contig receives the first palette color, the next largest receives the
-second, and so on. Once the palette is exhausted, the remaining smaller contigs
-share the fallback color. That fallback color still flows through matches, but
-it no longer distinguishes which individual small contig contributed a given
-fallback thread.
+For `all-pairs` images that do not include the reference, ribbons are colored locally from the upper genome in that selected pair because the ribbon itself no longer contains a direct reference thread. The comparison contig bars are still painted from direct reference evidence when available. The JSON render metadata records ribbon coloring as either `reference-flow` or `subject-local`, and comparison contig coloring as `reference-propagated` when global reference coloring is active.
+
+Reference colors are assigned by contig size, not FASTA order. The largest reference contig receives the first palette color, the next largest receives the second, and so on. Once the palette is exhausted, the remaining smaller contigs share the fallback color. That fallback color still flows through matches, but it no longer distinguishes which individual small contig contributed a given fallback thread.
 
 ## Contig Capping and Fragmented Assemblies
 
@@ -265,21 +240,13 @@ Use `--max-contigs` to keep highly fragmented assemblies readable.
 
 - `0` keeps all contigs.
 - `N` keeps the largest `N - 1` contigs as separate visible blocks.
-- The remaining smaller contigs are merged into one trailing
-  `remaining_contigs_N` block.
+- The remaining smaller contigs are merged into one trailing `remaining_contigs_N` block.
 
-The kept contigs preserve their original relative FASTA order. Smaller contigs
-that are not kept as separate blocks are moved into the trailing merged block.
-That merged block is aligned and can carry propagated reference color, but it
-always uses the fallback color because individual small-contig contributions are
-no longer distinguishable within that bin.
+The kept contigs preserve their original relative FASTA order. Smaller contigs that are not kept as separate blocks are moved into the trailing merged block. That merged block is aligned and can carry propagated reference color, but it always uses the fallback color because individual small-contig contributions are no longer distinguishable within that bin.
 
 ## Practical Recommendations
 
-`genome-loom` is designed for microbial-scale genome comparisons, including
-small plasmids through typical bacterial chromosomes. Larger assemblies can work,
-but figure density and rendering time increase as genome size, genome count, and
-contig count all rise together.
+`genome-loom` is designed for microbial-scale genome comparisons, including small plasmids through typical bacterial chromosomes. Larger assemblies can work, but figure density and rendering time increase as genome size, genome count, and contig count all rise together.
 
 ### Genome Size
 
@@ -295,16 +262,13 @@ For full-stack views such as `overview` and `neighbor`, a good rule of thumb is:
 recommended total genomes <= figure height in inches / 0.6
 ```
 
-So for the default `12 x 8` inch figure, aim for roughly 13 genomes or fewer in
-the full stacked views. In practice:
+So for the default `12 x 8` inch figure, aim for roughly 13 genomes or fewer in the full stacked views. In practice:
 
 - Best readability: about 4 to 10 total genomes.
 - Usually still workable: about 11 to 13 total genomes, especially with short names and contig capping.
 - Above that: increase figure height, reduce the genome set, or lean more heavily on the pairwise view families.
 
-`genome-loom` prints a warning to `stderr` and records it in the summary JSON
-when the selected full-stack views are likely to look crowded at the chosen
-height.
+`genome-loom` prints a warning to `stderr` and records it in the summary JSON when the selected full-stack views are likely to look crowded at the chosen height.
 
 ### Contigs Per Genome
 
@@ -314,10 +278,7 @@ height.
 
 ### Labels and Long Names
 
-Genome row labels shrink as figures get more crowded, and contig-legend items
-wrap onto additional rows. Long legend labels are truncated with an ellipsis
-when needed. If row labels or contig legends start to feel dense, the best
-fixes are:
+Genome row labels shrink as figures get more crowded, and contig-legend items wrap onto additional rows. Long legend labels are truncated with an ellipsis when needed. If row labels or contig legends start to feel dense, the best fixes are:
 
 - increase figure height
 - reduce the genome set for full-stack views
@@ -336,20 +297,17 @@ This writes:
 
 ```text
 examples/data/
-examples/real_data/ecoli/
-examples/real_data/most_contigs/
+examples/case_studies/ecoli_complete_reference/
+examples/case_studies/fragmented_reference/
 examples/output/light/
 examples/output/dark/
-examples/output/ecoli_real/
-examples/output/most_contigs/
+examples/output/ecoli_complete_reference/
+examples/output/fragmented_reference/
 ```
 
 The real-data examples are copied from local `genome-artistry` example datasets:
 
-- `ecoli_real`: one complete E. coli reference plus three comparisons.
-- `most_contigs`: the most fragmented local FASTA found in the neighboring
-  `genome-artistry` example/montage cache plus three nearby comparisons.
+- `ecoli_complete_reference`: one complete E. coli reference plus three comparisons.
+- `fragmented_reference`: the most fragmented local FASTA found in the neighboring `genome-artistry` example/montage cache plus three nearby comparisons.
 
-These example sets are useful for checking how contig capping, propagated
-reference color, and ribbon readability behave on both simple and fragmented
-assemblies.
+These example sets are useful for checking how contig capping, propagated reference color, and ribbon readability behave on both simple and fragmented assemblies.

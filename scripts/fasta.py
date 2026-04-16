@@ -21,6 +21,7 @@ class Genome:
     name: str
     path: Path
     contigs: list[Contig]
+    display_name: str | None = None
 
     @property
     def length(self) -> int:
@@ -59,7 +60,9 @@ def read_fasta(path: Path, *, min_contig_length: int = 0) -> Genome:
     return Genome(name=path.stem, path=path, contigs=contigs)
 
 
-def cap_contig_blocks(genome: Genome, max_contigs: int = 0, gap_size: int = 100) -> Genome:
+def cap_contig_blocks(
+    genome: Genome, max_contigs: int = 0, gap_size: int = 100
+) -> Genome:
     """Collapse smaller contigs so a genome never renders more than max_contigs blocks."""
     if max_contigs <= 0 or len(genome.contigs) <= max_contigs:
         return genome
@@ -89,7 +92,9 @@ def cap_contig_blocks(genome: Genome, max_contigs: int = 0, gap_size: int = 100)
         source_count=len(remainder),
         is_remainder=True,
     )
-    return Genome(name=genome.name, path=genome.path, contigs=[*retained, remainder_contig])
+    return Genome(
+        name=genome.name, path=genome.path, contigs=[*retained, remainder_contig]
+    )
 
 
 def write_fasta(path: Path, records: list[tuple[str, str]], width: int = 80) -> None:

@@ -44,10 +44,13 @@ def _collect_comparisons(values: list[str]) -> list[Path]:
 def _summary_for_genome(genome: Genome) -> dict:
     return {
         "name": genome.name,
+        "display_name": genome.display_name or genome.name,
         "path": str(genome.path),
         "length_bp": genome.length,
         "contig_count": len(genome.contigs),
-        "remainder_contig_count": sum(c.source_count for c in genome.contigs if c.is_remainder),
+        "remainder_contig_count": sum(
+            c.source_count for c in genome.contigs if c.is_remainder
+        ),
         "contigs": [
             {
                 "name": c.name,
@@ -78,6 +81,26 @@ def _alignment_summary(aln: PairwiseAlignment) -> dict:
 
 def _overlap_len(a_start: int, a_end: int, b_start: int, b_end: int) -> int:
     return max(0, min(a_end, b_end) - max(a_start, b_start))
+
+
+def _parse_display_name_pairs(values: list[str] | None) -> dict[str, str]:
+    overrides: dict[str, str] = {}
+    if not values:
+        return overrides
+    for value in values:
+        if "=" not in value:
+            raise argparse.ArgumentTypeError(
+                f"Malformed --display-names entry {value!r}; expected KEY=LABEL"
+            )
+        key, label = value.split("=", 1)
+        key = key.strip()
+        label = label.strip()
+        if not key or not label:
+            raise argparse.ArgumentTypeError(
+                f"Malformed --display-names entry {value!r}; expected KEY=LABEL"
+            )
+        overrides[key] = label
+    return overrides
 
 
 def _positive_int(value: str) -> int:
@@ -124,7 +147,9 @@ def _config_args_from_file(path: Path) -> list[str]:
     return args
 
 
-def _parse_args(parser: argparse.ArgumentParser, argv: list[str] | None) -> argparse.Namespace:
+def _parse_args(
+    parser: argparse.ArgumentParser, argv: list[str] | None
+) -> argparse.Namespace:
     raw = list(argv) if argv is not None else sys.argv[1:]
     bootstrap = argparse.ArgumentParser(add_help=False)
     bootstrap.add_argument("--config", type=Path)
@@ -208,12 +233,23 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Optional JSON config file; command-line arguments override config values.",
     )
-    parser.add_argument("--reference", required=True, type=Path, help="Reference genome FASTA.")
+    parser.add_argument(
+        "--reference", required=True, type=Path, help="Reference genome FASTA."
+    )
     parser.add_argument(
         "--comparisons",
         required=True,
         nargs="+",
         help="Comparison FASTA files and/or directories of FASTA files.",
+    )
+    parser.add_argument(
+        "--display-names",
+        nargs="+",
+        metavar="KEY=LABEL",
+        help=(
+            "Optional display-name overrides keyed by FASTA stem or filename, "
+            "for example reference=K-12_MG1655 or NC_000913.3.fasta=K-12 MG1655."
+        ),
     )
     parser.add_argument(
         "--outdir",
@@ -237,11 +273,21 @@ def build_parser() -> argparse.ArgumentParser:
         default=["overview", "reference-pairs", "neighbor"],
         help="Figure sets to generate when --outdir is used.",
     )
-    parser.add_argument("--format", choices=["png", "pdf", "svg"], default="png", help="Output format.")
-    parser.add_argument("--theme", choices=["light", "dark"], default="light", help="Figure theme.")
-    parser.add_argument("--width", type=_positive_float, default=12.0, help="Figure width in inches.")
-    parser.add_argument("--height", type=_positive_float, default=8.0, help="Figure height in inches.")
-    parser.add_argument("--dpi", type=_positive_int, default=300, help="Output resolution.")
+    parser.add_argument(
+        "--format", choices=["png", "pdf", "svg"], default="png", help="Output format."
+    )
+    parser.add_argument(
+        "--theme", choices=["light", "dark"], default="light", help="Figure theme."
+    )
+    parser.add_argument(
+        "--width", type=_positive_float, default=12.0, help="Figure width in inches."
+    )
+    parser.add_argument(
+        "--height", type=_positive_float, default=8.0, help="Figure height in inches."
+    )
+    parser.add_argument(
+        "--dpi", type=_positive_int, default=300, help="Output resolution."
+    )
     parser.add_argument(
         "--min-contig-length",
         type=_nonnegative_int,
@@ -355,9 +401,15 @@ def main(argv: list[str] | None = None) -> int:
     args = _parse_args(parser, argv)
 
     if args.outdir is None and args.output is None:
-        parser.error("Provide --outdir for figure sets or --output for one overview plot")
+        parser.error(
+            "Provide --outdir for figure sets or --output for one overview plot"
+        )
     if args.max_contigs == 1 or args.max_contigs < 0:
         parser.error("--max-contigs must be 0 or at least 2")
+    try:
+        display_name_overrides = _parse_display_name_pairs(args.display_names)
+    except argparse.ArgumentTypeError as exc:
+        parser.error(str(exc))
 
     reference_path = args.reference.resolve()
     if not reference_path.exists():
@@ -380,12 +432,19 @@ def main(argv: list[str] | None = None) -> int:
     outdir = outdir.resolve()
     summary_path = summary_path.resolve()
 
-    if args.outdir is not None and outdir.exists() and any(outdir.iterdir()) and not args.force:
+    if (
+        args.outdir is not None
+        and outdir.exists()
+        and any(outdir.iterdir())
+        and not args.force
+    ):
         parser.error(
             f"--outdir already exists and is not empty: {outdir} (use --force to overwrite)"
         )
     if output_path is not None and output_path.exists() and not args.force:
-        parser.error(f"--output already exists: {output_path} (use --force to overwrite)")
+        parser.error(
+            f"--output already exists: {output_path} (use --force to overwrite)"
+        )
     if summary_path.exists() and not args.force:
         parser.error(
             f"--summary-output already exists: {summary_path} (use --force to overwrite)"
@@ -421,9 +480,15 @@ def main(argv: list[str] | None = None) -> int:
     alignment_paths_by_path: dict[Path, Path] = {}
 
     try:
+
         def prepare_genome(path: Path, index: int) -> Genome:
             genome = read_fasta(path, min_contig_length=args.min_contig_length)
             genome = cap_contig_blocks(genome, max_contigs=args.max_contigs)
+            display_name = display_name_overrides.get(
+                path.stem
+            ) or display_name_overrides.get(path.name)
+            if display_name:
+                genome = replace(genome, display_name=display_name)
             prepared = work_dir / f"{index:03d}_{_safe_name(genome.name)}.fasta"
             write_fasta(
                 prepared,
@@ -441,7 +506,10 @@ def main(argv: list[str] | None = None) -> int:
         ordered_genomes = [genomes_by_path[p] for p in ordered_paths]
         comparison_genomes = [genomes_by_path[p] for p in comparison_paths]
         recommended_limit = _recommended_full_stack_limit(args.height)
-        if set(args.views) & FULL_STACK_VIEWS and len(ordered_genomes) > recommended_limit:
+        if (
+            set(args.views) & FULL_STACK_VIEWS
+            and len(ordered_genomes) > recommended_limit
+        ):
             warnings.append(
                 "Full-stack views may look crowded with "
                 f"{len(ordered_genomes)} genomes at {args.width:g}x{args.height:g} in. "
@@ -451,7 +519,9 @@ def main(argv: list[str] | None = None) -> int:
             )
             print(f"Warning: {warnings[-1]}", file=sys.stderr)
 
-        def get_alignment(subject_path: Path, comparison_path: Path) -> PairwiseAlignment:
+        def get_alignment(
+            subject_path: Path, comparison_path: Path
+        ) -> PairwiseAlignment:
             key = (str(subject_path), str(comparison_path))
             if key not in alignment_cache:
                 aln = run_minimap2(
@@ -481,17 +551,21 @@ def main(argv: list[str] | None = None) -> int:
 
         def ranked_contigs_by_size(genome: Genome):
             return sorted(
-                (item for item in enumerate(genome.contigs) if not item[1].is_remainder),
+                (
+                    item
+                    for item in enumerate(genome.contigs)
+                    if not item[1].is_remainder
+                ),
                 key=lambda item: (-item[1].length, item[0]),
             )
 
         theme_fallback = THEMES[args.theme].fallback_contig
         reference_colors = {}
-        for rank, (_original_index, contig) in enumerate(ranked_contigs_by_size(reference)):
+        for rank, (_original_index, contig) in enumerate(
+            ranked_contigs_by_size(reference)
+        ):
             reference_colors[contig.name] = (
-                DEFAULT_COLORS[rank]
-                if rank < len(DEFAULT_COLORS)
-                else theme_fallback
+                DEFAULT_COLORS[rank] if rank < len(DEFAULT_COLORS) else theme_fallback
             )
         for contig in reference.contigs:
             if contig.is_remainder:
@@ -610,9 +684,13 @@ def main(argv: list[str] | None = None) -> int:
                     )
             return segments, intervals
 
-        _global_reference_flow: tuple[list[RibbonSegment], dict[str, dict[str, list[ColorInterval]]]] | None = None
+        _global_reference_flow: (
+            tuple[list[RibbonSegment], dict[str, dict[str, list[ColorInterval]]]] | None
+        ) = None
 
-        def global_reference_flow() -> tuple[list[RibbonSegment], dict[str, dict[str, list[ColorInterval]]]]:
+        def global_reference_flow() -> (
+            tuple[list[RibbonSegment], dict[str, dict[str, list[ColorInterval]]]]
+        ):
             nonlocal _global_reference_flow
             if _global_reference_flow is None:
                 _global_reference_flow = build_reference_flow(
@@ -620,7 +698,9 @@ def main(argv: list[str] | None = None) -> int:
                 )
             return _global_reference_flow
 
-        def record(view: str, output: Path, meta: dict, subject: Genome, comps: list[Genome]) -> None:
+        def record(
+            view: str, output: Path, meta: dict, subject: Genome, comps: list[Genome]
+        ) -> None:
             generated.append(
                 {
                     "view": view,
@@ -685,7 +765,9 @@ def main(argv: list[str] | None = None) -> int:
                         view_dir
                         / f"{_safe_name(reference.name)}-vs-{_safe_name(genome.name)}.{ext}"
                     )
-                    segments, _selected_intervals = build_reference_flow([(reference_path, path)])
+                    segments, _selected_intervals = build_reference_flow(
+                        [(reference_path, path)]
+                    )
                     _global_segments, intervals = global_reference_flow()
                     meta = _render_one(
                         subject=reference,
@@ -716,7 +798,9 @@ def main(argv: list[str] | None = None) -> int:
                         / f"{_safe_name(subject.name)}-vs-{_safe_name(comp.name)}.{ext}"
                     )
                     if a_path == reference_path:
-                        segments, _selected_intervals = build_reference_flow([(a_path, b_path)])
+                        segments, _selected_intervals = build_reference_flow(
+                            [(a_path, b_path)]
+                        )
                         _global_segments, intervals = global_reference_flow()
                         meta = _render_one(
                             subject=subject,
@@ -795,7 +879,9 @@ def main(argv: list[str] | None = None) -> int:
                     "outdir": str(outdir),
                     "output": str(output_path) if output_path is not None else None,
                     "summary_json": str(summary_path),
-                    "work_dir": str(work_dir) if args.keep_temp or args.work_dir else None,
+                    "work_dir": (
+                        str(work_dir) if args.keep_temp or args.work_dir else None
+                    ),
                     "figures": generated,
                 },
                 "settings": {
@@ -814,7 +900,9 @@ def main(argv: list[str] | None = None) -> int:
                 },
                 "runtime": {
                     "threads": args.threads,
-                    "config": str(args.config.resolve()) if args.config is not None else None,
+                    "config": (
+                        str(args.config.resolve()) if args.config is not None else None
+                    ),
                     "tmpdir": str(tmp_parent) if tmp_parent is not None else None,
                     "keep_temp": args.keep_temp,
                     "force": args.force,
