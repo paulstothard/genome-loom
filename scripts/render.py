@@ -452,7 +452,7 @@ def render_loom(
     scale_label_h = (font_size / 72.0 / height) * 1.25
     scale_band_h = scale_label_h + 0.045
     note_text = (
-        "Reference-derived colors propagated from "
+        "Reference-based colors propagated from "
         f"{_shorten(_display_name(reference), 28)} to comparison contigs using sequence alignments."
     )
     note_h = (font_size / 72.0 / height) * 1.25 if color_intervals else 0.0
@@ -744,6 +744,6 @@ def render_loom(
         ),
         "color_assignment": "largest-contigs-first",
         "comparison_contig_coloring": (
-            "reference-propagated" if color_intervals else "neutral"
+            "reference-based" if color_intervals else "neutral"
         ),
     }

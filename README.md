@@ -2,9 +2,15 @@
 
 genome-loom creates comparative genome ribbon plots that show how a reference genome aligns with multiple comparison genomes across overview, pairwise, and neighbor-chain views. The reference remains at the top of the stack, comparison genomes remain in input order, and the figure set changes only which ribbon layer is visible. `genome-loom` preserves genome order, contig order, and contig orientation.
 
-| Overview | Reference Pair | All Pairs | Neighbor Chain |
+| Overview | Reference-Pairs | All-Pairs | Neighbor |
 | :-: | :-: | :-: | :-: |
 | [![overview](examples/output/light/overview/reference-vs-all.png)](examples/output/light/overview/reference-vs-all.png) | [![reference pair](examples/output/light/reference_pairs/reference-vs-comparison_alpha.png)](examples/output/light/reference_pairs/reference-vs-comparison_alpha.png) | [![all pairs](examples/output/light/all_pairs/comparison_alpha-vs-comparison_beta.png)](examples/output/light/all_pairs/comparison_alpha-vs-comparison_beta.png) | [![neighbor](examples/output/light/neighbor/neighbor-chain.png)](examples/output/light/neighbor/neighbor-chain.png) |
+
+- `overview`: one full-stack figure showing ribbons from the reference to all comparison genomes at once.
+- `reference-pairs`: one two-row figure per reference-to-comparison relationship, showing the reference and one selected comparison genome.
+- `all-pairs`: one two-row figure per genome pair, showing only the two genomes involved in that selected comparison.
+- `neighbor`: one full-stack figure showing ribbons only between adjacent rows in the supplied genome order.
+- Comparison contigs are painted from their relationship to the reference, so the same reference-based color context can carry across the full figure set, including pairwise views where the reference row is not shown.
 
 ## Installation
 
@@ -226,13 +232,13 @@ Practical rule of thumb:
 
 ## Color Propagation and Figure Meaning
 
-For `overview`, `reference-pairs`, `neighbor`, and any `all-pairs` figure that includes the reference, ribbons use reference-flow colors. A reference contig color follows the aligned DNA into comparison rows, and comparison contig bars are painted where direct reference-alignment evidence indicates reference-derived sequence is present.
+For `overview`, `reference-pairs`, `neighbor`, and any `all-pairs` figure that includes the reference, ribbons use reference-flow colors. A reference contig color follows the aligned DNA into comparison rows, and comparison contig bars are painted where direct reference-alignment evidence indicates reference-based sequence context is present.
 
 That propagated comparison-contig coloring is global across the figure set, so it remains visible even when the current image is showing only one selected pair or a neighbor-chain ribbon layer. In `neighbor`, those colors can continue to percolate downward through adjacent comparisons.
 
 The figure row label for the top genome now reads `reference | <name>` so the viewer can see both the role and the actual identifier. In pairwise figures that do not show the reference row, the legend note still names the reference genome that supplied the propagated color context.
 
-For `all-pairs` images that do not include the reference, ribbons are colored locally from the upper genome in that selected pair because the ribbon itself no longer contains a direct reference thread. The comparison contig bars are still painted from direct reference evidence when available. The JSON render metadata records ribbon coloring as either `reference-flow` or `subject-local`, and comparison contig coloring as `reference-propagated` when global reference coloring is active.
+For `all-pairs` images that do not include the reference, ribbons are colored locally from the upper genome in that selected pair because the ribbon itself no longer contains a direct reference thread. The comparison contig bars are still painted from direct reference evidence when available. The JSON render metadata records ribbon coloring as either `reference-flow` or `subject-local`, and comparison contig coloring as `reference-based` when global reference coloring is active.
 
 Reference colors are assigned by contig size, not FASTA order. The largest reference contig receives the first palette color, the next largest receives the second, and so on. Once the palette is exhausted, the remaining smaller contigs share the fallback color. That fallback color still flows through matches, but it no longer distinguishes which individual small contig contributed a given fallback thread.
 
