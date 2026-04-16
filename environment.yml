@@ -1,0 +1,13 @@
+name: genome-loom
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - minimap2
+  - matplotlib
+  - numpy
+  - pyyaml
+  - pillow
+  - pip

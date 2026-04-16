@@ -1,0 +1,513 @@
+{
+  "status": "success",
+  "tool": "genome-loom",
+  "generated": "2026-04-16T15:55:46.276375+00:00",
+  "version": "0.2.0",
+  "inputs": {
+    "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/reference.fasta",
+    "comparisons": [
+      "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002589795_1.fasta",
+      "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002011945_1.fasta",
+      "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002854065_1.fasta"
+    ]
+  },
+  "outputs": {
+    "outdir": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs",
+    "output": null,
+    "summary_json": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/genome-loom.summary.json",
+    "work_dir": null,
+    "figures": [
+      {
+        "view": "overview",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/overview/reference-vs-all.png",
+        "subject": "reference",
+        "comparisons": [
+          "GCF_002589795_1",
+          "GCF_002011945_1",
+          "GCF_002854065_1"
+        ],
+        "render": {
+          "subject_contig_colors": {
+            "reference": {
+              "NZ_CP032892.1": "#0072B2",
+              "NZ_CP032888.1": "#D55E00",
+              "NZ_CP032890.1": "#009E73",
+              "NZ_CP032880.1": "#CC79A7",
+              "NZ_CP032891.1": "#C9B000",
+              "remaining_contigs_8": "#b8b8b8"
+            }
+          },
+          "legend_contig_colors": {
+            "NZ_CP032892.1": "#0072B2",
+            "NZ_CP032888.1": "#D55E00",
+            "NZ_CP032890.1": "#009E73",
+            "NZ_CP032880.1": "#CC79A7",
+            "NZ_CP032891.1": "#C9B000",
+            "remaining_contigs_8": "#b8b8b8"
+          },
+          "legend_subject": "reference",
+          "colored_subjects": [
+            "reference"
+          ],
+          "distinct_subject_contig_colors": 5,
+          "fallback_subject_contigs": 8,
+          "legend_rows": 1,
+          "scale_bar_bp": 2000000,
+          "row_order": [
+            "reference",
+            "GCF_002589795_1",
+            "GCF_002011945_1",
+            "GCF_002854065_1"
+          ],
+          "theme": "light",
+          "thread_mode": "reference-flow",
+          "color_assignment": "largest-contigs-first",
+          "comparison_contig_coloring": "reference-propagated"
+        }
+      },
+      {
+        "view": "reference-pairs",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/reference_pairs/reference-vs-GCF_002589795_1.png",
+        "subject": "reference",
+        "comparisons": [
+          "GCF_002589795_1"
+        ],
+        "render": {
+          "subject_contig_colors": {
+            "reference": {
+              "NZ_CP032892.1": "#0072B2",
+              "NZ_CP032888.1": "#D55E00",
+              "NZ_CP032890.1": "#009E73",
+              "NZ_CP032880.1": "#CC79A7",
+              "NZ_CP032891.1": "#C9B000",
+              "remaining_contigs_8": "#b8b8b8"
+            }
+          },
+          "legend_contig_colors": {
+            "NZ_CP032892.1": "#0072B2",
+            "NZ_CP032888.1": "#D55E00",
+            "NZ_CP032890.1": "#009E73",
+            "NZ_CP032880.1": "#CC79A7",
+            "NZ_CP032891.1": "#C9B000",
+            "remaining_contigs_8": "#b8b8b8"
+          },
+          "legend_subject": "reference",
+          "colored_subjects": [
+            "reference"
+          ],
+          "distinct_subject_contig_colors": 5,
+          "fallback_subject_contigs": 8,
+          "legend_rows": 1,
+          "scale_bar_bp": 2000000,
+          "row_order": [
+            "reference",
+            "GCF_002589795_1"
+          ],
+          "theme": "light",
+          "thread_mode": "reference-flow",
+          "color_assignment": "largest-contigs-first",
+          "comparison_contig_coloring": "reference-propagated"
+        }
+      },
+      {
+        "view": "reference-pairs",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/reference_pairs/reference-vs-GCF_002011945_1.png",
+        "subject": "reference",
+        "comparisons": [
+          "GCF_002011945_1"
+        ],
+        "render": {
+          "subject_contig_colors": {
+            "reference": {
+              "NZ_CP032892.1": "#0072B2",
+              "NZ_CP032888.1": "#D55E00",
+              "NZ_CP032890.1": "#009E73",
+              "NZ_CP032880.1": "#CC79A7",
+              "NZ_CP032891.1": "#C9B000",
+              "remaining_contigs_8": "#b8b8b8"
+            }
+          },
+          "legend_contig_colors": {
+            "NZ_CP032892.1": "#0072B2",
+            "NZ_CP032888.1": "#D55E00",
+            "NZ_CP032890.1": "#009E73",
+            "NZ_CP032880.1": "#CC79A7",
+            "NZ_CP032891.1": "#C9B000",
+            "remaining_contigs_8": "#b8b8b8"
+          },
+          "legend_subject": "reference",
+          "colored_subjects": [
+            "reference"
+          ],
+          "distinct_subject_contig_colors": 5,
+          "fallback_subject_contigs": 8,
+          "legend_rows": 1,
+          "scale_bar_bp": 2000000,
+          "row_order": [
+            "reference",
+            "GCF_002011945_1"
+          ],
+          "theme": "light",
+          "thread_mode": "reference-flow",
+          "color_assignment": "largest-contigs-first",
+          "comparison_contig_coloring": "reference-propagated"
+        }
+      },
+      {
+        "view": "reference-pairs",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/reference_pairs/reference-vs-GCF_002854065_1.png",
+        "subject": "reference",
+        "comparisons": [
+          "GCF_002854065_1"
+        ],
+        "render": {
+          "subject_contig_colors": {
+            "reference": {
+              "NZ_CP032892.1": "#0072B2",
+              "NZ_CP032888.1": "#D55E00",
+              "NZ_CP032890.1": "#009E73",
+              "NZ_CP032880.1": "#CC79A7",
+              "NZ_CP032891.1": "#C9B000",
+              "remaining_contigs_8": "#b8b8b8"
+            }
+          },
+          "legend_contig_colors": {
+            "NZ_CP032892.1": "#0072B2",
+            "NZ_CP032888.1": "#D55E00",
+            "NZ_CP032890.1": "#009E73",
+            "NZ_CP032880.1": "#CC79A7",
+            "NZ_CP032891.1": "#C9B000",
+            "remaining_contigs_8": "#b8b8b8"
+          },
+          "legend_subject": "reference",
+          "colored_subjects": [
+            "reference"
+          ],
+          "distinct_subject_contig_colors": 5,
+          "fallback_subject_contigs": 8,
+          "legend_rows": 1,
+          "scale_bar_bp": 2000000,
+          "row_order": [
+            "reference",
+            "GCF_002854065_1"
+          ],
+          "theme": "light",
+          "thread_mode": "reference-flow",
+          "color_assignment": "largest-contigs-first",
+          "comparison_contig_coloring": "reference-propagated"
+        }
+      },
+      {
+        "view": "neighbor",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/most_contigs/neighbor/neighbor-chain.png",
+        "subject": "reference",
+        "comparisons": [
+          "GCF_002589795_1",
+          "GCF_002011945_1",
+          "GCF_002854065_1"
+        ],
+        "render": {
+          "subject_contig_colors": {
+            "reference": {
+              "NZ_CP032892.1": "#0072B2",
+              "NZ_CP032888.1": "#D55E00",
+              "NZ_CP032890.1": "#009E73",
+              "NZ_CP032880.1": "#CC79A7",
+              "NZ_CP032891.1": "#C9B000",
+              "remaining_contigs_8": "#b8b8b8"
+            }
+          },
+          "legend_contig_colors": {
+            "NZ_CP032892.1": "#0072B2",
+            "NZ_CP032888.1": "#D55E00",
+            "NZ_CP032890.1": "#009E73",
+            "NZ_CP032880.1": "#CC79A7",
+            "NZ_CP032891.1": "#C9B000",
+            "remaining_contigs_8": "#b8b8b8"
+          },
+          "legend_subject": "reference",
+          "colored_subjects": [
+            "reference"
+          ],
+          "distinct_subject_contig_colors": 5,
+          "fallback_subject_contigs": 8,
+          "legend_rows": 1,
+          "scale_bar_bp": 2000000,
+          "row_order": [
+            "reference",
+            "GCF_002589795_1",
+            "GCF_002011945_1",
+            "GCF_002854065_1"
+          ],
+          "theme": "light",
+          "thread_mode": "reference-flow",
+          "color_assignment": "largest-contigs-first",
+          "comparison_contig_coloring": "reference-propagated"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "views": [
+      "overview",
+      "reference-pairs",
+      "neighbor"
+    ],
+    "format": "png",
+    "theme": "light",
+    "width": 13.0,
+    "height": 8.0,
+    "dpi": 180
+  },
+  "filters": {
+    "min_contig_length": 1000,
+    "max_contigs": 6,
+    "min_block_length": 5000,
+    "min_mapq": 0
+  },
+  "runtime": {
+    "threads": 2,
+    "config": null,
+    "tmpdir": null,
+    "keep_temp": false,
+    "force": false
+  },
+  "alignment": {
+    "tool": "minimap2",
+    "preset": "asm5"
+  },
+  "ordering": {
+    "method": "input",
+    "genome_order": [
+      "reference",
+      "GCF_002589795_1",
+      "GCF_002011945_1",
+      "GCF_002854065_1"
+    ]
+  },
+  "genomes": [
+    {
+      "name": "reference",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/reference.fasta",
+      "length_bp": 5326972,
+      "contig_count": 6,
+      "remainder_contig_count": 8,
+      "contigs": [
+        {
+          "name": "NZ_CP032892.1",
+          "length_bp": 4894694,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP032880.1",
+          "length_bp": 82675,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP032888.1",
+          "length_bp": 109553,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP032890.1",
+          "length_bp": 91014,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP032891.1",
+          "length_bp": 67351,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "remaining_contigs_8",
+          "length_bp": 81685,
+          "source_count": 8,
+          "is_remainder": true
+        }
+      ]
+    },
+    {
+      "name": "GCF_002589795_1",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002589795_1.fasta",
+      "length_bp": 5122356,
+      "contig_count": 6,
+      "remainder_contig_count": 6,
+      "contigs": [
+        {
+          "name": "NZ_CP023899.1",
+          "length_bp": 4711093,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP023903.1",
+          "length_bp": 101274,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP023895.1",
+          "length_bp": 91648,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP023896.1",
+          "length_bp": 83988,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP023897.1",
+          "length_bp": 51479,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "remaining_contigs_6",
+          "length_bp": 82874,
+          "source_count": 6,
+          "is_remainder": true
+        }
+      ]
+    },
+    {
+      "name": "GCF_002011945_1",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002011945_1.fasta",
+      "length_bp": 5223396,
+      "contig_count": 6,
+      "remainder_contig_count": 4,
+      "contigs": [
+        {
+          "name": "NZ_CP018948.1",
+          "length_bp": 4891786,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP018947.1",
+          "length_bp": 143972,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP018946.1",
+          "length_bp": 87114,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP018944.1",
+          "length_bp": 27133,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP018945.1",
+          "length_bp": 55436,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "remaining_contigs_4",
+          "length_bp": 17955,
+          "source_count": 4,
+          "is_remainder": true
+        }
+      ]
+    },
+    {
+      "name": "GCF_002854065_1",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/real_data/most_contigs/comparisons/GCF_002854065_1.fasta",
+      "length_bp": 5212044,
+      "contig_count": 6,
+      "remainder_contig_count": 3,
+      "contigs": [
+        {
+          "name": "NZ_CP024147.1",
+          "length_bp": 4639454,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP024150.1",
+          "length_bp": 108710,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP024151.1",
+          "length_bp": 97858,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP024152.1",
+          "length_bp": 87351,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "NZ_CP024153.1",
+          "length_bp": 98181,
+          "source_count": 1,
+          "is_remainder": false
+        },
+        {
+          "name": "remaining_contigs_3",
+          "length_bp": 180490,
+          "source_count": 3,
+          "is_remainder": true
+        }
+      ]
+    }
+  ],
+  "alignments": {
+    "reference.fasta::GCF_002589795_1.fasta": {
+      "subject": "reference.fasta",
+      "comparison": "GCF_002589795_1.fasta",
+      "ani": 0.704727,
+      "aligned_bases": 5618116,
+      "matching_bases": 3959240,
+      "block_count": 25
+    },
+    "reference.fasta::GCF_002011945_1.fasta": {
+      "subject": "reference.fasta",
+      "comparison": "GCF_002011945_1.fasta",
+      "ani": 0.737253,
+      "aligned_bases": 5550472,
+      "matching_bases": 4092101,
+      "block_count": 13
+    },
+    "reference.fasta::GCF_002854065_1.fasta": {
+      "subject": "reference.fasta",
+      "comparison": "GCF_002854065_1.fasta",
+      "ani": 0.590925,
+      "aligned_bases": 5584548,
+      "matching_bases": 3300051,
+      "block_count": 19
+    },
+    "GCF_002589795_1.fasta::GCF_002011945_1.fasta": {
+      "subject": "GCF_002589795_1.fasta",
+      "comparison": "GCF_002011945_1.fasta",
+      "ani": 0.71812,
+      "aligned_bases": 5354968,
+      "matching_bases": 3845507,
+      "block_count": 9
+    },
+    "GCF_002011945_1.fasta::GCF_002854065_1.fasta": {
+      "subject": "GCF_002011945_1.fasta",
+      "comparison": "GCF_002854065_1.fasta",
+      "ani": 0.590953,
+      "aligned_bases": 5491816,
+      "matching_bases": 3245404,
+      "block_count": 16
+    }
+  },
+  "warnings": []
+}
