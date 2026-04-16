@@ -1,6 +1,6 @@
 # genome-loom
 
-Generate coordinated genome ribbon figure sets from local FASTA files. A supplied reference genome stays at the top of the stack, comparison genomes stay in the input order, and the figure set changes only which ribbon layer is visible. `genome-loom` does not reorder genomes, reorder contigs, or flip contigs, so the native coordinate system remains honest and reproducible.
+genome-loom creates comparative genome ribbon plots that show how a reference genome aligns with multiple comparison genomes across overview, pairwise, and neighbor-chain views. A supplied reference genome stays at the top of the stack, comparison genomes stay in the input order, and the figure set changes only which ribbon layer is visible. `genome-loom` does not reorder genomes, reorder contigs, or flip contigs, so the native coordinate system remains honest and reproducible.
 
 | Overview | Reference Pair | All Pairs | Neighbor Chain |
 | :-: | :-: | :-: | :-: |
@@ -206,9 +206,9 @@ Command-line arguments override values loaded from the config file, so a caller 
 
 `genome-loom` currently uses `minimap2` for all alignments. The main alignment mode option is the minimap2 preset:
 
-- `--minimap-preset asm5`: strictest and usually best for very close assemblies or strain-level work.
-- `--minimap-preset asm10`: more tolerant when expected matches start to disappear.
-- `--minimap-preset asm20`: loosest of the three standard assembly presets and best for more divergent exploratory comparisons.
+- `--minimap-preset asm5`: best starting point for very close assemblies or strain-level comparisons. In the figures, this usually gives the cleanest long ribbons and the least spurious low-similarity clutter, but it can drop genuinely homologous regions once divergence becomes moderate.
+- `--minimap-preset asm10`: a middle ground for somewhat more diverged comparisons. In the figures, this often restores ribbons that `asm5` missed, but the recovered alignments may be shorter, more broken up, or more repetitive-looking than in a very close comparison.
+- `--minimap-preset asm20`: most permissive of the three standard assembly presets and best for more divergent exploratory work. In the figures, this can recover coarse synteny and shared regions across larger divergence, but ribbons are more likely to be fragmented, partial, or visually busy, so interpretation should be more cautious.
 
 Other alignment-related options:
 
@@ -218,9 +218,11 @@ Other alignment-related options:
 
 Practical rule of thumb:
 
-- Use `asm5` for close same-species or strain comparisons.
-- Try `asm10` if expected ribbons disappear for moderately diverged genomes.
-- Try `asm20` when sensitivity matters more than strictness.
+- Use `asm5` first for close same-species or strain comparisons when you want the cleanest and most conservative ribbon structure.
+- Move to `asm10` when expected homologous regions start disappearing, or when the figure looks too sparse even though the genomes should still share substantial structure.
+- Move to `asm20` for clearly more divergent genomes when the goal is to recover broad shared structure rather than only the strongest high-confidence blocks.
+- If a more permissive preset adds many short, broken, or noisy ribbons, raise `--min-block-length` and/or `--min-mapq` to keep the figure readable.
+- If a permissive preset changes the figure dramatically, treat the result as a broader structural sketch rather than a crisp one-to-one alignment view.
 
 ## Color Propagation and Figure Meaning
 
