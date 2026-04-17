@@ -353,6 +353,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Allow overwriting existing outputs and reusing a non-empty --work-dir.",
     )
     parser.add_argument("--title", help="Optional figure title override.")
+    parser.add_argument(
+        "--reference-role-label",
+        default="reference",
+        help=(
+            "Optional role-label prefix for the top reference row. "
+            "Use 'none' to omit the prefix."
+        ),
+    )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     return parser
 
@@ -375,6 +383,7 @@ def _render_one(
     title: str | None,
     theme: str,
     actual_reference: Genome | None = None,
+    reference_role_label: str | None = "reference",
 ) -> dict:
     from scripts.render import render_loom
 
@@ -395,6 +404,7 @@ def _render_one(
         full_color_genomes=full_color_genomes,
         legend_genome=legend_genome,
         actual_reference=actual_reference,
+        reference_role_label=reference_role_label,
     )
 
 
@@ -412,6 +422,9 @@ def main(argv: list[str] | None = None) -> int:
         display_name_overrides = _parse_display_name_pairs(args.display_names)
     except argparse.ArgumentTypeError as exc:
         parser.error(str(exc))
+    reference_role_label = args.reference_role_label.strip()
+    if reference_role_label.lower() == "none":
+        reference_role_label = ""
 
     reference_path = args.reference.resolve()
     if not reference_path.exists():
@@ -732,6 +745,7 @@ def main(argv: list[str] | None = None) -> int:
                 title=args.title or f"{reference.name} vs all comparisons",
                 theme=args.theme,
                 actual_reference=reference,
+                reference_role_label=reference_role_label or None,
             )
             record("overview", args.output, meta, reference, comparison_genomes)
         else:
@@ -759,6 +773,7 @@ def main(argv: list[str] | None = None) -> int:
                     title=args.title or f"{reference.name} vs all comparisons",
                     theme=args.theme,
                     actual_reference=reference,
+                    reference_role_label=reference_role_label or None,
                 )
                 record("overview", output, meta, reference, comparison_genomes)
 
@@ -790,6 +805,7 @@ def main(argv: list[str] | None = None) -> int:
                         title=f"{reference.name} vs {genome.name}",
                         theme=args.theme,
                         actual_reference=reference,
+                        reference_role_label=reference_role_label or None,
                     )
                     record("reference-pairs", output, meta, reference, [genome])
 
@@ -824,6 +840,7 @@ def main(argv: list[str] | None = None) -> int:
                             title=f"{subject.name} vs {comp.name}",
                             theme=args.theme,
                             actual_reference=reference,
+                            reference_role_label=reference_role_label or None,
                         )
                     else:
                         layers = [make_layer(a_path, b_path)]
@@ -844,6 +861,7 @@ def main(argv: list[str] | None = None) -> int:
                             title=f"{subject.name} vs {comp.name}",
                             theme=args.theme,
                             actual_reference=reference,
+                            reference_role_label=reference_role_label or None,
                         )
                     record("all-pairs", output, meta, subject, [comp])
 
@@ -873,6 +891,7 @@ def main(argv: list[str] | None = None) -> int:
                     title="Neighbor chain",
                     theme=args.theme,
                     actual_reference=reference,
+                    reference_role_label=reference_role_label or None,
                 )
                 record("neighbor", output, meta, reference, ordered_genomes[1:])
 
@@ -897,6 +916,7 @@ def main(argv: list[str] | None = None) -> int:
                     "views": args.views,
                     "format": args.format,
                     "theme": args.theme,
+                    "reference_role_label": reference_role_label or None,
                     "width": args.width,
                     "height": args.height,
                     "dpi": args.dpi,

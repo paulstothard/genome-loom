@@ -150,10 +150,14 @@ def _display_name(genome: Genome) -> str:
     return (genome.display_name or genome.name).replace("_", " ")
 
 
-def _row_label(genome: Genome, reference: Genome) -> str:
+def _row_label(
+    genome: Genome,
+    reference: Genome,
+    reference_role_label: str | None = "reference",
+) -> str:
     label = _display_name(genome)
-    if genome.name == reference.name:
-        return f"reference | {label}"
+    if genome.name == reference.name and reference_role_label:
+        return f"{reference_role_label} | {label}"
     return label
 
 
@@ -173,19 +177,22 @@ def _wrap_legend_entries(
     width_in: float,
     fontsize_pts: float,
     sw: float,
-) -> list[list[tuple[str, str, str, float]]]:
-    rows: list[list[tuple[str, str, str, float]]] = [[]]
-    cursor = 0.0
+) -> tuple[list[list[tuple[str, str, str, float]]], float]:
+    items: list[tuple[str, str, str, float]] = []
     item_gap = 0.026
     for raw_label, display_label, color in entries:
         item_w = sw + 0.008 + _text_width_frac(display_label, fontsize_pts, width_in)
         item_w = min(item_w, plot_width * 0.70)
-        if rows[-1] and cursor + item_w > plot_width:
-            rows.append([])
-            cursor = 0.0
-        rows[-1].append((raw_label, display_label, color, item_w))
-        cursor += item_w + item_gap
-    return rows
+        items.append((raw_label, display_label, color, item_w))
+
+    if not items:
+        return [[]], plot_width
+
+    cell_w = max(item_w for *_rest, item_w in items)
+    cols = max(1, int((plot_width + item_gap) / (cell_w + item_gap)))
+    cols = min(cols, len(items))
+    rows = [items[i : i + cols] for i in range(0, len(items), cols)]
+    return rows, cell_w
 
 
 def _ranked_contigs_by_size(genome: Genome):
@@ -262,10 +269,10 @@ def _layout_genome(
     genome: Genome,
     x_left: float,
     x_width: float,
-    max_length: int,
+    max_span: int,
     gap_bp: int,
 ) -> dict[str, ContigLayout]:
-    x_per_bp = x_width / max(max_length, 1)
+    x_per_bp = x_width / max(max_span, 1)
     offset = 0
     layout: dict[str, ContigLayout] = {}
     for contig in genome.contigs:
@@ -357,6 +364,7 @@ def render_loom(
     full_color_genomes: set[str] | None = None,
     legend_genome: Genome | None = None,
     actual_reference: Genome | None = None,
+    reference_role_label: str | None = "reference",
 ) -> dict:
     """Render a stacked subject-to-comparison ribbon plot."""
     theme = THEMES.get(theme_name)
@@ -386,6 +394,11 @@ def render_loom(
 
     max_len = max(g.length for g in genomes)
     gap_bp = max(1_000, int(max_len * 0.008))
+    max_span = max(
+        sum(contig.length for contig in genome.contigs)
+        + gap_bp * max(0, len(genome.contigs) - 1)
+        for genome in genomes
+    )
 
     fig, ax = plt.subplots(figsize=(width, height), dpi=dpi)
     fig.patch.set_facecolor(theme.background)
@@ -395,7 +408,12 @@ def render_loom(
     ax.axis("off")
 
     row_labels = {
-        genome.name: _row_label(genome, actual_reference) for genome in genomes
+        genome.name: _row_label(
+            genome,
+            actual_reference,
+            reference_role_label=reference_role_label,
+        )
+        for genome in genomes
     }
     longest_genome_label = max(len(label) for label in row_labels.values())
     label_size = max(7.0, min(16.0, height * 0.95, 82.0 / row_count))
@@ -461,7 +479,7 @@ def render_loom(
         )
 
     sw = max(0.010, min(0.018, 0.18 / width))
-    legend_rows = _wrap_legend_entries(
+    legend_rows, legend_cell_w = _wrap_legend_entries(
         legend_entries,
         plot_width=plot_width,
         width_in=width,
@@ -503,12 +521,12 @@ def render_loom(
         )
 
     layouts = {
-        genome.name: _layout_genome(genome, plot_left, plot_width, max_len, gap_bp)
+        genome.name: _layout_genome(genome, plot_left, plot_width, max_span, gap_bp)
         for genome in genomes
     }
     row_y = {genome.name: top - i * row_gap for i, genome in enumerate(genomes)}
     scale_bp = _nice_scale_length(max_len)
-    scale_w = (scale_bp / max_len) * plot_width
+    scale_w = (scale_bp / max(max_span, 1)) * plot_width
     ribbon_edge_forward = mcolors.to_rgba(
         _mix_colors(theme.text, theme.background, 0.40), alpha=0.55
     )
@@ -598,7 +616,9 @@ def render_loom(
                 )
                 if color is None:
                     if subject.name in full_color_genomes:
-                        color = colors.get(block.reference_contig, theme.fallback_contig)
+                        color = colors.get(
+                            block.reference_contig, theme.fallback_contig
+                        )
                     else:
                         color = theme.comparison_fill
                 ribbon_items.append(
@@ -745,7 +765,7 @@ def render_loom(
                 fontsize=font_size,
                 color=theme.text,
             )
-            x += item_w + 0.026
+            x += legend_cell_w + 0.026
 
     if color_intervals:
         ax.text(

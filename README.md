@@ -78,7 +78,7 @@ The two pairwise view families are intentionally easier to read: each image show
 
 ## Using Your Own FASTA Files
 
-`genome_loom.py` is the main single-entry script. It is intended to behave like a predictable, non-interactive batch command for local use or for systems such as Proksee.
+`genome_loom.py` is the main single-entry script. It behaves like a predictable, non-interactive batch command for local use or server-side pipelines.
 
 ```bash
 # Full figure set
@@ -108,6 +108,13 @@ python genome_loom.py \
     "comparison_a=E. coli O157:H7" \
     "comparison_b=E. coli CFT073"
 
+# Change the role-label prefix shown on the top row
+python genome_loom.py \
+  --reference ref.fasta \
+  --comparisons comparison_a.fasta \
+  --outdir results \
+  --reference-role-label assembly
+
 # Server-style run with explicit summary and work directory
 python genome_loom.py \
   --reference ref.fasta \
@@ -129,6 +136,7 @@ Key options are summarized below; run `python genome_loom.py --help` for the ful
 | `--reference` | — | Reference genome FASTA (required) |
 | `--comparisons` | — | Comparison FASTAs: files and/or directories scanned one level deep for `.fa`, `.fasta`, `.fna`, or `.fas` files |
 | `--display-names` | — | Optional `KEY=LABEL` overrides keyed by FASTA stem or filename for figure labels and titles |
+| `--reference-role-label` | `reference` | Optional role-label prefix for the top row; use `none` to omit the prefix |
 | `--outdir` | — | Output directory for figure families and summary JSON |
 | `--output` | — | Compatibility shortcut for one overview image |
 | `--summary-output` | `outdir/genome-loom.summary.json` | Machine-readable JSON summary |
@@ -237,7 +245,7 @@ For `overview`, `reference-pairs`, `neighbor`, and any `all-pairs` figure that i
 
 That propagated comparison-contig coloring is global across the figure set, so it remains visible even when the current image is showing only one selected pair or a neighbor-chain ribbon layer. In `neighbor`, those colors can continue to percolate downward through adjacent comparisons.
 
-The figure row label for the top genome now reads `reference | <name>` so the viewer can see both the role and the actual identifier. In pairwise figures that do not show the reference row, the legend note still names the reference genome that supplied the propagated color context.
+By default, the figure row label for the top genome reads `reference | <name>` so the viewer can see both the role and the actual identifier. `--reference-role-label` can override that prefix, and `--reference-role-label none` omits it entirely. In pairwise figures that do not show the reference row, the legend note still names the reference genome that supplied the propagated color context.
 
 For `all-pairs` images that do not include the reference, ribbons are colored locally from the upper genome in that selected pair because the ribbon itself no longer contains a direct reference thread. The comparison contig bars are still painted from direct reference evidence when available. The JSON render metadata records ribbon coloring as either `reference-flow` or `subject-local`, and comparison contig coloring as `reference-based` when global reference coloring is active.
 
