@@ -157,6 +157,7 @@ Key options are summarized below; run `python genome_loom.py --help` for the ful
 | `--keep-temp` | off | Keep an auto-created temporary work directory after the run |
 | `--force` | off | Allow overwriting existing outputs and reusing a non-empty `--work-dir` |
 | `--config` | — | JSON config file; CLI arguments override config values |
+| `--check` | — | Check wrapper and external-tool availability, then exit |
 | `--version` | — | Print version and exit |
 
 ## Server and Batch Use
@@ -179,6 +180,7 @@ python genome_loom.py \
 Practical recommendations for predictable server-side operation:
 
 - Pass absolute paths or paths inside the job directory.
+- Run `python genome_loom.py --check` in the target conda environment before accepting jobs.
 - Use `--summary-output` with a known filename such as `results.json`.
 - Use `--work-dir` if prepared FASTAs should be retained for debugging or caching.
 - Use `--tmpdir` when temporary files should live on fast local scratch storage.
@@ -307,7 +309,7 @@ Genome row labels shrink as figures get more crowded, and contig-legend items wr
 Generate deterministic synthetic genomes plus two real-data example sets:
 
 ```bash
-bash make_examples.sh
+bash rebuild_example_outputs.sh
 ```
 
 This writes:

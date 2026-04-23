@@ -5,6 +5,7 @@ import argparse
 import itertools
 import json
 import re
+import shutil
 import sys
 import tempfile
 import textwrap
@@ -124,6 +125,27 @@ def _positive_float(value: str) -> float:
     return parsed
 
 
+def _check_tool(name: str) -> dict:
+    resolved = shutil.which(name)
+    return {
+        "requested": name,
+        "resolved": resolved,
+        "available": resolved is not None,
+    }
+
+
+def _write_check() -> int:
+    payload = {
+        "tool": "genome-loom",
+        "version": VERSION,
+        "checks": {
+            "minimap2": _check_tool("minimap2"),
+        },
+    }
+    print(json.dumps(payload, indent=2))
+    return 0
+
+
 def _config_args_from_file(path: Path) -> list[str]:
     payload = json.loads(path.read_text())
     if not isinstance(payload, dict):
@@ -233,12 +255,9 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Optional JSON config file; command-line arguments override config values.",
     )
-    parser.add_argument(
-        "--reference", required=True, type=Path, help="Reference genome FASTA."
-    )
+    parser.add_argument("--reference", type=Path, help="Reference genome FASTA.")
     parser.add_argument(
         "--comparisons",
-        required=True,
         nargs="+",
         help="Comparison FASTA files and/or directories of FASTA files.",
     )
@@ -362,6 +381,11 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Check wrapper and external-tool availability, then exit.",
+    )
     return parser
 
 
@@ -412,6 +436,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = _parse_args(parser, argv)
 
+    if args.check:
+        return _write_check()
+    if args.reference is None:
+        parser.error("--reference is required")
+    if not args.comparisons:
+        parser.error("--comparisons is required")
     if args.outdir is None and args.output is None:
         parser.error(
             "Provide --outdir for figure sets or --output for one overview plot"

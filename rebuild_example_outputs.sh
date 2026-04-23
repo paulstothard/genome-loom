@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Rebuild all committed genome-loom example data, images, and summaries.
 set -euo pipefail
 
 EXAMPLES_DIR="examples"
