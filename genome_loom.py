@@ -13,11 +13,17 @@ from dataclasses import replace
 from pathlib import Path
 
 from scripts.align import PairwiseAlignment, run_minimap2
-from scripts.fasta import Genome, cap_contig_blocks, read_fasta, write_fasta
+from scripts.fasta import (
+    Genome,
+    cap_contig_blocks,
+    read_fasta,
+    select_contigs,
+    write_fasta,
+)
 from scripts.summary import write_summary
 
 
-VERSION = "0.2.1"
+VERSION = "0.2.3"
 VIEW_CHOICES = ("overview", "reference-pairs", "all-pairs", "neighbor")
 MINIMAP2_PRESETS = ("asm5", "asm10", "asm20")
 FULL_STACK_VIEWS = {"overview", "neighbor"}
@@ -104,6 +110,22 @@ def _parse_display_name_pairs(values: list[str] | None) -> dict[str, str]:
     return overrides
 
 
+def _parse_contig_name_filters(values: list[str] | None) -> list[str]:
+    if not values:
+        return []
+    names: list[str] = []
+    for value in values:
+        for item in value.split(","):
+            name = item.strip()
+            if name and name not in names:
+                names.append(name)
+    if not names:
+        raise argparse.ArgumentTypeError(
+            "contig selection must include at least one contig name"
+        )
+    return names
+
+
 def _positive_int(value: str) -> int:
     parsed = int(value)
     if parsed <= 0:
@@ -185,7 +207,17 @@ def _parse_args(
         config_args = _config_args_from_file(config_path)
     except Exception as exc:
         parser.error(f"Could not parse --config {config_path}: {exc}")
-    return parser.parse_args(config_args + raw)
+    filtered_raw: list[str] = []
+    skip_next = False
+    for token in raw:
+        if skip_next:
+            skip_next = False
+            continue
+        if token == "--config":
+            skip_next = True
+            continue
+        filtered_raw.append(token)
+    return parser.parse_args(config_args + filtered_raw)
 
 
 def _recommended_full_stack_limit(height_in: float) -> int:
@@ -256,6 +288,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Optional JSON config file; command-line arguments override config values.",
     )
     parser.add_argument("--reference", type=Path, help="Reference genome FASTA.")
+    parser.add_argument(
+        "--reference-contigs",
+        "--assembly-contigs",
+        "--query-contigs",
+        nargs="+",
+        metavar="CONTIG",
+        help=(
+            "Optional contig names to keep from the top/reference genome only. "
+            "Names can be supplied as separate values or comma-separated."
+        ),
+    )
     parser.add_argument(
         "--comparisons",
         nargs="+",
@@ -452,6 +495,10 @@ def main(argv: list[str] | None = None) -> int:
         display_name_overrides = _parse_display_name_pairs(args.display_names)
     except argparse.ArgumentTypeError as exc:
         parser.error(str(exc))
+    try:
+        selected_reference_contigs = _parse_contig_name_filters(args.reference_contigs)
+    except argparse.ArgumentTypeError as exc:
+        parser.error(str(exc))
     reference_role_label = args.reference_role_label.strip()
     if reference_role_label.lower() == "none":
         reference_role_label = ""
@@ -528,6 +575,8 @@ def main(argv: list[str] | None = None) -> int:
 
         def prepare_genome(path: Path, index: int) -> Genome:
             genome = read_fasta(path, min_contig_length=args.min_contig_length)
+            if path == reference_path and selected_reference_contigs:
+                genome = select_contigs(genome, selected_reference_contigs)
             genome = cap_contig_blocks(genome, max_contigs=args.max_contigs)
             display_name = display_name_overrides.get(
                 path.stem
@@ -932,6 +981,7 @@ def main(argv: list[str] | None = None) -> int:
                 "inputs": {
                     "reference": str(reference_path),
                     "comparisons": [str(p) for p in comparison_paths],
+                    "reference_contigs": selected_reference_contigs or None,
                 },
                 "outputs": {
                     "outdir": str(outdir),
@@ -952,6 +1002,7 @@ def main(argv: list[str] | None = None) -> int:
                     "dpi": args.dpi,
                 },
                 "filters": {
+                    "reference_contigs": selected_reference_contigs or None,
                     "min_contig_length": args.min_contig_length,
                     "max_contigs": args.max_contigs,
                     "min_block_length": args.min_block_length,

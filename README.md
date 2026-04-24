@@ -115,6 +115,13 @@ python genome_loom.py \
   --outdir results \
   --reference-role-label assembly
 
+# Focus the figure on selected top/reference contigs
+python genome_loom.py \
+  --reference assembly.fasta \
+  --reference-contigs chromosome plasmid_A \
+  --comparisons comparisons/ \
+  --outdir focused-results
+
 # Server-style run with explicit summary and work directory
 python genome_loom.py \
   --reference ref.fasta \
@@ -137,6 +144,7 @@ Key options are summarized below; run `python genome_loom.py --help` for the ful
 | `--comparisons` | — | Comparison FASTAs: files and/or directories scanned one level deep for `.fa`, `.fasta`, `.fna`, or `.fas` files |
 | `--display-names` | — | Optional `KEY=LABEL` overrides keyed by FASTA stem or filename for figure labels and titles |
 | `--reference-role-label` | `reference` | Optional role-label prefix for the top row; use `none` to omit the prefix |
+| `--reference-contigs` | — | Keep only the named contigs from the top/reference genome |
 | `--outdir` | — | Output directory for figure families and summary JSON |
 | `--output` | — | Compatibility shortcut for one overview image |
 | `--summary-output` | `outdir/genome-loom.summary.json` | Machine-readable JSON summary |
@@ -200,6 +208,8 @@ The JSON summary includes:
 - warnings, such as likely crowding in full-stack views
 
 On failure, the summary still attempts to record the error type, message, and the output paths already known to the wrapper.
+
+If `--reference-contigs` is used, only those named contigs from the top/reference genome are prepared, aligned, summarized, and rendered. This is useful when the top genome is a large assembly but the figure should concentrate on one chromosome, plasmid, or a small hand-picked set of contigs.
 
 ### JSON Config Files
 

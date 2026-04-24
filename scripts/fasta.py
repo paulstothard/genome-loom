@@ -97,6 +97,29 @@ def cap_contig_blocks(
     )
 
 
+def select_contigs(genome: Genome, contig_names: list[str]) -> Genome:
+    """Keep only the requested contigs, preserving the requested order."""
+    wanted = [name for name in contig_names if name]
+    if not wanted:
+        return genome
+
+    by_name = {contig.name: contig for contig in genome.contigs}
+    missing = [name for name in wanted if name not in by_name]
+    if missing:
+        available = ", ".join(contig.name for contig in genome.contigs)
+        raise ValueError(
+            f"Requested contig(s) not found in {genome.path}: {', '.join(missing)}. "
+            f"Available contigs: {available}"
+        )
+
+    return Genome(
+        name=genome.name,
+        path=genome.path,
+        contigs=[by_name[name] for name in wanted],
+        display_name=genome.display_name,
+    )
+
+
 def write_fasta(path: Path, records: list[tuple[str, str]], width: int = 80) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as handle:

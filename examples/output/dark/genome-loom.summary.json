@@ -47,9 +47,7 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": [
-            "reference"
-          ],
+          "colored_subjects": ["reference"],
           "distinct_subject_contig_colors": 6,
           "fallback_subject_contigs": 0,
           "legend_rows": 1,
@@ -74,9 +72,7 @@
         "view": "reference-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/dark/reference_pairs/reference-vs-comparison_alpha.png",
         "subject": "reference",
-        "comparisons": [
-          "comparison_alpha"
-        ],
+        "comparisons": ["comparison_alpha"],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -98,17 +94,12 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": [
-            "reference"
-          ],
+          "colored_subjects": ["reference"],
           "distinct_subject_contig_colors": 6,
           "fallback_subject_contigs": 0,
           "legend_rows": 1,
           "scale_bar_bp": 50000,
-          "row_order": [
-            "reference",
-            "comparison_alpha"
-          ],
+          "row_order": ["reference", "comparison_alpha"],
           "theme": "dark",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -123,9 +114,7 @@
         "view": "reference-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/dark/reference_pairs/reference-vs-comparison_beta.png",
         "subject": "reference",
-        "comparisons": [
-          "comparison_beta"
-        ],
+        "comparisons": ["comparison_beta"],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -147,17 +136,12 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": [
-            "reference"
-          ],
+          "colored_subjects": ["reference"],
           "distinct_subject_contig_colors": 6,
           "fallback_subject_contigs": 0,
           "legend_rows": 1,
           "scale_bar_bp": 50000,
-          "row_order": [
-            "reference",
-            "comparison_beta"
-          ],
+          "row_order": ["reference", "comparison_beta"],
           "theme": "dark",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -172,9 +156,7 @@
         "view": "reference-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/dark/reference_pairs/reference-vs-comparison_gamma.png",
         "subject": "reference",
-        "comparisons": [
-          "comparison_gamma"
-        ],
+        "comparisons": ["comparison_gamma"],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -196,17 +178,12 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": [
-            "reference"
-          ],
+          "colored_subjects": ["reference"],
           "distinct_subject_contig_colors": 6,
           "fallback_subject_contigs": 0,
           "legend_rows": 1,
           "scale_bar_bp": 50000,
-          "row_order": [
-            "reference",
-            "comparison_gamma"
-          ],
+          "row_order": ["reference", "comparison_gamma"],
           "theme": "dark",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -291,11 +268,7 @@
     ]
   },
   "settings": {
-    "views": [
-      "overview",
-      "reference-pairs",
-      "neighbor"
-    ],
+    "views": ["overview", "reference-pairs", "neighbor"],
     "format": "png",
     "theme": "dark",
     "width": 12.0,
