@@ -4,11 +4,11 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.12
-  - minimap2
-  - matplotlib
-  - numpy
-  - pyyaml
-  - pillow
-  - pytest
-  - pip
+  - python=3.12.13
+  - minimap2=2.30
+  - matplotlib=3.10.9
+  - numpy=2.4.3
+  - pyyaml=6.0.3
+  - pillow=12.2.0
+  - pytest=9.0.3
+  - pip=26.0.1
