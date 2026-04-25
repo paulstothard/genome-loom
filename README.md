@@ -138,35 +138,35 @@ python genome_loom.py --config run.json --outdir results --force
 
 Key options are summarized below; run `python genome_loom.py --help` for the full reference.
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `--reference` | — | Reference genome FASTA (required) |
-| `--comparisons` | — | Comparison FASTAs: files and/or directories scanned one level deep for `.fa`, `.fasta`, `.fna`, or `.fas` files |
-| `--display-names` | — | Optional `KEY=LABEL` overrides keyed by FASTA stem or filename for figure labels and titles |
-| `--reference-role-label` | `reference` | Optional role-label prefix for the top row; use `none` to omit the prefix |
-| `--reference-contigs` | — | Keep only the named contigs from the top/reference genome |
-| `--outdir` | — | Output directory for figure families and summary JSON |
-| `--output` | — | Compatibility shortcut for one overview image |
-| `--summary-output` | `outdir/genome-loom.summary.json` | Machine-readable JSON summary |
-| `--views` | `overview reference-pairs neighbor` | Figure families to generate |
-| `--format` | `png` | `png`, `pdf`, or `svg` |
-| `--theme` | `light` | `light` or `dark` |
-| `--width` / `--height` | `12` / `8` | Figure dimensions in inches |
-| `--dpi` | `300` | Output resolution |
-| `--title` | — | Figure title override |
-| `--min-contig-length` | `1000` | Discard contigs shorter than this before rendering |
-| `--max-contigs` | `0` | Cap visible contig blocks per genome; `0` keeps all contigs |
-| `--min-block-length` | `500` | Discard short alignment blocks |
-| `--minimap-preset` | `asm5` | `asm5`, `asm10`, or `asm20` |
-| `--min-mapq` | `0` | Discard low-confidence alignment blocks |
-| `--threads` | `1` | Thread count passed to minimap2 |
-| `--tmpdir` | — | Parent directory for an auto-created temporary work directory |
-| `--work-dir` | — | Explicit intermediate directory for prepared FASTAs and cached files |
-| `--keep-temp` | off | Keep an auto-created temporary work directory after the run |
-| `--force` | off | Allow overwriting existing outputs and reusing a non-empty `--work-dir` |
-| `--config` | — | JSON config file; CLI arguments override config values |
-| `--check` | — | Check wrapper and external-tool availability, then exit |
-| `--version` | — | Print version and exit |
+| Option | Required | Default | Description |
+| --- | --- | --- | --- |
+| `--reference` | Yes, unless `--check` or `--version` | — | Reference genome FASTA. |
+| `--comparisons` | Yes, unless `--check` or `--version` | — | Comparison FASTAs: files and/or directories scanned one level deep for `.fa`, `.fasta`, `.fna`, or `.fas` files. |
+| `--outdir` | Required unless `--output`, `--check`, or `--version` is used | — | Output directory for figure families and summary JSON. |
+| `--output` | Required unless `--outdir`, `--check`, or `--version` is used | — | Compatibility shortcut for one overview image. |
+| `--summary-output` | No | `OUTDIR/genome-loom.summary.json`, or `OUTPUT` with `.json` suffix | Machine-readable JSON summary path. |
+| `--display-names` | No | — | Optional `KEY=LABEL` overrides keyed by FASTA stem or filename for figure labels and titles. |
+| `--reference-role-label` | No | `reference` | Optional role-label prefix for the top row; use `none` to omit the prefix. |
+| `--reference-contigs` | No | — | Keep only the named contigs from the top/reference genome. Aliases: `--assembly-contigs`, `--query-contigs`. |
+| `--views` | No | `overview reference-pairs neighbor` | Figure families to generate when `--outdir` is used. |
+| `--format` | No | `png` | Output format: `png`, `pdf`, or `svg`. |
+| `--theme` | No | `light` | Figure theme: `light` or `dark`. |
+| `--width` / `--height` | No | `12` / `8` | Figure dimensions in inches. |
+| `--dpi` | No | `300` | Output resolution. |
+| `--title` | No | — | Figure title override. |
+| `--min-contig-length` | No | `1000` | Discard contigs shorter than this before rendering. |
+| `--max-contigs` | No | `0` | Cap visible contig blocks per genome; `0` keeps all contigs, and `1` is rejected. |
+| `--min-block-length` | No | `500` | Discard short alignment blocks. |
+| `--minimap-preset` | No | `asm5` | minimap2 preset: `asm5`, `asm10`, or `asm20`. |
+| `--min-mapq` | No | `0` | Discard low-confidence alignment blocks. |
+| `--threads` | No | `1` | Thread count passed to minimap2. |
+| `--tmpdir` | No | System temp directory | Parent directory for an auto-created temporary work directory. |
+| `--work-dir` | No | Auto-created temporary directory | Explicit intermediate directory for prepared FASTAs and cached files. |
+| `--keep-temp` | No | Off | Keep an auto-created temporary work directory after the run. |
+| `--force` | No | Off | Allow overwriting existing outputs and reusing a non-empty `--work-dir`. |
+| `--config` | No | — | JSON config file. Keys map to CLI options by replacing `_` with `-`; command-line arguments override config values. |
+| `--check` | No | Off | Check wrapper and external-tool availability, then exit. |
+| `--version` | No | — | Print version, then exit. |
 
 ## Server and Batch Use
 

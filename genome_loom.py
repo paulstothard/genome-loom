@@ -23,7 +23,7 @@ from scripts.fasta import (
 from scripts.summary import write_summary
 
 
-VERSION = "0.2.4"
+VERSION = "0.2.5"
 VIEW_CHOICES = ("overview", "reference-pairs", "all-pairs", "neighbor")
 MINIMAP2_PRESETS = ("asm5", "asm10", "asm20")
 FULL_STACK_VIEWS = {"overview", "neighbor"}

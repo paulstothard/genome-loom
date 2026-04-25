@@ -30,7 +30,7 @@ Treat the CLI, view names, figure paths, summary JSON, and alignment/filtering s
 ## Modification Approach
 
 - Read `README.md` before changing CLI behavior, figure layout, output paths, summary shape, or alignment filtering.
-- If adding options, update config parsing, README option table, summary recording, and tests.
+- If adding options, update config parsing, README option table, summary recording, and tests. README option tables should keep the normalized columns `Option`, `Required`, `Default`, and `Description`, with defaults copied from the parser or documented as path-derived values.
 - If changing minimap2 invocation or block filtering, add tests around block parsing/filtering and run at least one example render.
 - If changing rendering, inspect PNG/SVG outputs manually and verify all requested view families still write summary records.
 - If this repo is used as a submodule elsewhere, coordinate API-affecting changes with `ragtag-scaffolding`.
