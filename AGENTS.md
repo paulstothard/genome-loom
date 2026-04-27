@@ -51,7 +51,7 @@ Example/full checks:
 conda run -n genome-loom bash rebuild_example_outputs.sh
 ```
 
-Run fast tests for parser, config, summary, and mocked alignment/rendering edits. Run example rebuilds when changing rendering, output layout, minimap2 settings, or README image examples.
+Run fast tests for parser, config, summary, and mocked alignment/rendering edits. Run example rebuilds when changing rendering, output layout, minimap2 settings, or README image examples. Do not run any tests after changes that affect only README files, comments, or whitespace.
 
 ## Release Process
 
