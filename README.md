@@ -340,3 +340,7 @@ The real-data examples are copied from local `genome-artistry` example datasets:
 - `fragmented_reference`: the most fragmented local FASTA found in the neighboring `genome-artistry` example/montage cache plus three nearby comparisons.
 
 These example sets are useful for checking how contig capping, propagated reference color, and ribbon readability behave on both simple and fragmented assemblies.
+
+## Dependencies
+
+- **minimap2** 2.30 — sequence alignment for genome ribbon figures. [GitHub](https://github.com/lh3/minimap2) · [Li 2018](https://doi.org/10.1093/bioinformatics/bty191)
