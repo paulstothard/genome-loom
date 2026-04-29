@@ -76,7 +76,7 @@ results/
 
 The two pairwise view families are intentionally easier to read: each image shows only the two genomes involved in that selected comparison, which creates more vertical separation between rows and makes ribbon geometry easier to interpret than in the full stacked views.
 
-## Using Your Own FASTA Files
+## Main Options
 
 `genome_loom.py` is the main single-entry script. It behaves like a predictable, non-interactive batch command for local use or server-side pipelines.
 
@@ -168,7 +168,26 @@ Key options are summarized below; run `python genome_loom.py --help` for the ful
 | `--check` | No | Off | Check wrapper and external-tool availability, then exit. |
 | `--version` | No | — | Print version, then exit. |
 
-## Server and Batch Use
+## Output Layout
+
+Typical output when `--outdir` is used:
+
+```text
+results/
+├── genome-loom.summary.json
+├── overview/
+│   └── reference-vs-all.png
+├── reference_pairs/
+│   └── reference-vs-comparison.png
+├── all_pairs/
+│   └── comparison_a-vs-comparison_b.png
+└── neighbor/
+    └── neighbor-chain.png
+```
+
+The exact figure directories depend on `--views`. When `--output` is used instead of `--outdir`, the wrapper writes one overview image and a sibling summary JSON path derived from the output filename unless `--summary-output` is supplied.
+
+## Server And Batch Use
 
 `genome_loom.py` is the preferred entry point for an analysis server. It requires explicit inputs, never prompts interactively, exits nonzero on failure, and writes a machine-readable JSON summary for the caller.
 
@@ -314,7 +333,7 @@ Genome row labels shrink as figures get more crowded, and contig-legend items wr
 - lower `--max-contigs`
 - rely on pairwise views for detailed interpretation
 
-## Example Data and Example Rendering
+## Examples
 
 Generate deterministic synthetic genomes plus two real-data example sets:
 
