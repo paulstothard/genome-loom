@@ -1,7 +1,7 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-06-20T20:15:01.562280+00:00",
+  "generated": "2026-06-20T20:36:00.414083+00:00",
   "version": "0.3.0",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/reference.fasta",
@@ -48,7 +48,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -99,7 +99,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -148,7 +148,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -197,7 +197,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -246,7 +246,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -295,7 +295,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -344,7 +344,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -393,7 +393,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "GCF_002589795_1"
           ],
@@ -442,7 +442,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "GCF_002589795_1"
           ],
@@ -491,7 +491,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "GCF_002011945_1"
           ],
@@ -542,7 +542,7 @@
             "remaining_contigs_8": "#b8b8b8"
           },
           "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
+          "legend_note": "Reference-based colors propagated from NZ_CP032892.1 to comparison contigs using sequence alignments.",
           "colored_subjects": [
             "reference"
           ],
@@ -618,7 +618,7 @@
   "genomes": [
     {
       "name": "reference",
-      "display_name": "reference",
+      "display_name": "NZ_CP032892.1",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/reference.fasta",
       "length_bp": 5326972,
       "contig_count": 6,
@@ -664,7 +664,7 @@
     },
     {
       "name": "GCF_002589795_1",
-      "display_name": "GCF_002589795_1",
+      "display_name": "NZ_CP023899.1",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002589795_1.fasta",
       "length_bp": 5122356,
       "contig_count": 6,
@@ -710,7 +710,7 @@
     },
     {
       "name": "GCF_002011945_1",
-      "display_name": "GCF_002011945_1",
+      "display_name": "NZ_CP018948.1",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002011945_1.fasta",
       "length_bp": 5223396,
       "contig_count": 6,
@@ -756,7 +756,7 @@
     },
     {
       "name": "GCF_002854065_1",
-      "display_name": "GCF_002854065_1",
+      "display_name": "NZ_CP024147.1",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002854065_1.fasta",
       "length_bp": 5212044,
       "contig_count": 6,

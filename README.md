@@ -136,6 +136,10 @@ python genome_loom.py \
 python genome_loom.py --config run.json --outdir results --force
 ```
 
+Display labels are used exactly as supplied. genome-loom does not rewrite
+underscores, dots, or other accession punctuation, so accession labels such as
+`GCF_001900355.1` can be shown without renaming input files.
+
 Key options are summarized below; run `python genome_loom.py --help` for the full reference.
 
 | Option | Required | Default | Description |

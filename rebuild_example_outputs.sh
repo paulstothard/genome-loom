@@ -74,6 +74,11 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   --max-contigs 6 \
   --min-block-length 5000 \
   --threads 2 \
+  --display-names \
+  "reference=NC_000913.3" \
+  "GCF_003073835_1=NZ_CP029115.1" \
+  "GCF_002854065_1=NZ_CP024147.1" \
+  "GCF_001900355_1=NZ_CP010133.1" \
   --title "Real E. coli Example"
 
 "${PYTHON[@]}" genome_loom.py \
@@ -94,6 +99,11 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   --max-contigs 6 \
   --min-block-length 5000 \
   --threads 2 \
+  --display-names \
+  "reference=NZ_CP032892.1" \
+  "GCF_002589795_1=NZ_CP023899.1" \
+  "GCF_002011945_1=NZ_CP018948.1" \
+  "GCF_002854065_1=NZ_CP024147.1" \
   --title "Most-Contig Local Example"
 
 echo "Examples written to ${OUT_DIR}/light, ${OUT_DIR}/dark, ${OUT_DIR}/ecoli_complete_reference, and ${OUT_DIR}/fragmented_reference"

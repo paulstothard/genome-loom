@@ -147,7 +147,7 @@ def _shorten(text: str, max_chars: int) -> str:
 
 
 def _display_name(genome: Genome) -> str:
-    return (genome.display_name or genome.name).replace("_", " ")
+    return genome.display_name or genome.name
 
 
 def _row_label(
@@ -233,7 +233,7 @@ def _legend_entries_from_intervals(
             entries.append(
                 (
                     interval.origin,
-                    _shorten(interval.origin.replace("_", " "), 24),
+                    _shorten(interval.origin, 24),
                     interval.color,
                 )
             )

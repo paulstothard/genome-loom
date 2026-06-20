@@ -70,6 +70,10 @@ def _summary_for_genome(genome: Genome) -> dict:
     }
 
 
+def _figure_name(genome: Genome) -> str:
+    return genome.display_name or genome.name
+
+
 def _safe_name(name: str) -> str:
     cleaned = re.sub(r"[^A-Za-z0-9._-]+", "_", name.strip())
     return cleaned.strip("._-") or "genome"
@@ -956,7 +960,7 @@ def main(argv: list[str] | None = None) -> int:
                 width=args.width,
                 height=args.height,
                 dpi=args.dpi,
-                title=args.title or f"{reference.name} vs all comparisons",
+                title=args.title or f"{_figure_name(reference)} vs all comparisons",
                 theme=args.theme,
                 actual_reference=reference,
                 reference_role_label=reference_role_label or None,
@@ -984,7 +988,8 @@ def main(argv: list[str] | None = None) -> int:
                     width=args.width,
                     height=args.height,
                     dpi=args.dpi,
-                    title=args.title or f"{reference.name} vs all comparisons",
+                    title=args.title
+                    or f"{_figure_name(reference)} vs all comparisons",
                     theme=args.theme,
                     actual_reference=reference,
                     reference_role_label=reference_role_label or None,
@@ -1016,7 +1021,7 @@ def main(argv: list[str] | None = None) -> int:
                         width=args.width,
                         height=args.height,
                         dpi=args.dpi,
-                        title=f"{reference.name} vs {genome.name}",
+                        title=f"{_figure_name(reference)} vs {_figure_name(genome)}",
                         theme=args.theme,
                         actual_reference=reference,
                         reference_role_label=reference_role_label or None,
@@ -1051,7 +1056,7 @@ def main(argv: list[str] | None = None) -> int:
                             width=args.width,
                             height=args.height,
                             dpi=args.dpi,
-                            title=f"{subject.name} vs {comp.name}",
+                            title=f"{_figure_name(subject)} vs {_figure_name(comp)}",
                             theme=args.theme,
                             actual_reference=reference,
                             reference_role_label=reference_role_label or None,
@@ -1072,7 +1077,7 @@ def main(argv: list[str] | None = None) -> int:
                             width=args.width,
                             height=args.height,
                             dpi=args.dpi,
-                            title=f"{subject.name} vs {comp.name}",
+                            title=f"{_figure_name(subject)} vs {_figure_name(comp)}",
                             theme=args.theme,
                             actual_reference=reference,
                             reference_role_label=reference_role_label or None,
