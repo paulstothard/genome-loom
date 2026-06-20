@@ -25,6 +25,7 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   --outdir "${OUT_DIR}/light" \
   --summary-output "${OUT_DIR}/light/genome-loom.summary.json" \
   --views overview reference-pairs all-pairs neighbor \
+  --genome-order reference-similarity \
   --format png \
   --theme light \
   --width 12 \
@@ -45,6 +46,7 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   --outdir "${OUT_DIR}/dark" \
   --summary-output "${OUT_DIR}/dark/genome-loom.summary.json" \
   --views overview reference-pairs neighbor \
+  --genome-order reference-similarity \
   --format png \
   --theme dark \
   --width 12 \
@@ -65,6 +67,7 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   --outdir "${OUT_DIR}/ecoli_complete_reference" \
   --summary-output "${OUT_DIR}/ecoli_complete_reference/genome-loom.summary.json" \
   --views overview reference-pairs all-pairs neighbor \
+  --genome-order reference-similarity \
   --format png \
   --theme light \
   --width 13 \
@@ -90,6 +93,7 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   --outdir "${OUT_DIR}/fragmented_reference" \
   --summary-output "${OUT_DIR}/fragmented_reference/genome-loom.summary.json" \
   --views overview reference-pairs all-pairs neighbor \
+  --genome-order reference-similarity \
   --format png \
   --theme light \
   --width 13 \

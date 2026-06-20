@@ -63,6 +63,81 @@ def test_reference_segments_can_be_loaded_from_config(tmp_path: Path) -> None:
     assert args.reference_segments == 4
 
 
+def test_genome_order_reference_similarity_sorts_comparisons(
+    monkeypatch, tmp_path: Path
+) -> None:
+    reference = tmp_path / "reference.fasta"
+    low = tmp_path / "low.fasta"
+    high = tmp_path / "high.fasta"
+    middle = tmp_path / "middle.fasta"
+    write_fasta(reference, [("chr", "ACGTACGT")])
+    write_fasta(low, [("low", "ACGTACGT")])
+    write_fasta(high, [("high", "ACGTACGT")])
+    write_fasta(middle, [("middle", "ACGTACGT")])
+
+    def fake_minimap2(reference_fasta, comparison_fasta, **kwargs):
+        if "high" in comparison_fasta.name:
+            ani = 0.99
+        elif "middle" in comparison_fasta.name:
+            ani = 0.95
+        else:
+            ani = 0.80
+        return PairwiseAlignment(
+            reference=reference_fasta,
+            comparison=comparison_fasta,
+            blocks=[],
+            aligned_bases=8,
+            matching_bases=round(8 * ani),
+            ani=ani,
+        )
+
+    monkeypatch.setattr("genome_loom.run_minimap2", fake_minimap2)
+
+    captured = {}
+
+    def fake_render(**kwargs):
+        captured["context_order"] = [g.name for g in kwargs["context_genomes"]]
+        captured["comparison_order"] = [g.name for g in kwargs["comparisons"]]
+        return {"figure_path": str(kwargs["output"]), "view": "overview"}
+
+    monkeypatch.setattr("scripts.render.render_loom", fake_render)
+
+    outdir = tmp_path / "results"
+    exit_code = main(
+        [
+            "--reference",
+            str(reference),
+            "--comparisons",
+            str(low),
+            str(high),
+            str(middle),
+            "--genome-order",
+            "reference-similarity",
+            "--outdir",
+            str(outdir),
+            "--views",
+            "overview",
+            "--min-contig-length",
+            "0",
+        ]
+    )
+    assert exit_code == 0
+
+    assert captured["context_order"] == ["reference", "high", "middle", "low"]
+    assert captured["comparison_order"] == ["high", "middle", "low"]
+
+    summary = json.loads((outdir / "genome-loom.summary.json").read_text())
+    assert summary["settings"]["genome_order"] == "reference-similarity"
+    assert summary["ordering"]["method"] == "reference-similarity"
+    assert summary["ordering"]["input_comparison_order"] == ["low", "high", "middle"]
+    assert summary["ordering"]["comparison_order"] == ["high", "middle", "low"]
+    assert summary["ordering"]["reference_similarity"] == [
+        {"name": "high", "ani": 0.99},
+        {"name": "middle", "ani": 0.95},
+        {"name": "low", "ani": 0.8},
+    ]
+
+
 def test_reference_segments_are_passed_to_renderer(
     monkeypatch, tmp_path: Path
 ) -> None:

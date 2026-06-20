@@ -1,8 +1,8 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-06-20T21:40:14.037888+00:00",
-  "version": "0.3.1",
+  "generated": "2026-06-20T22:17:55.413069+00:00",
+  "version": "0.4.0",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/ecoli_complete_reference/reference.fasta",
     "comparisons": [
@@ -25,8 +25,8 @@
         "subject": "reference",
         "comparisons": [
           "GCF_003073835_1",
-          "GCF_002854065_1",
-          "GCF_001900355_1"
+          "GCF_001900355_1",
+          "GCF_002854065_1"
         ],
         "render": {
           "subject_contig_colors": {
@@ -49,8 +49,8 @@
           "row_order": [
             "reference",
             "GCF_003073835_1",
-            "GCF_002854065_1",
-            "GCF_001900355_1"
+            "GCF_001900355_1",
+            "GCF_002854065_1"
           ],
           "theme": "light",
           "thread_mode": "reference-flow",
@@ -103,45 +103,6 @@
       },
       {
         "view": "reference-pairs",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/reference_pairs/reference-vs-GCF_002854065_1.png",
-        "subject": "reference",
-        "comparisons": [
-          "GCF_002854065_1"
-        ],
-        "render": {
-          "subject_contig_colors": {
-            "reference": {
-              "NC_000913.3": "#0072B2"
-            }
-          },
-          "legend_contig_colors": {
-            "NC_000913.3": "#0072B2"
-          },
-          "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from NC_000913.3 to comparison contigs using sequence alignments.",
-          "colored_subjects": [
-            "reference"
-          ],
-          "distinct_subject_contig_colors": 1,
-          "fallback_subject_contigs": 0,
-          "legend_rows": 1,
-          "scale_bar_bp": 2000000,
-          "row_order": [
-            "reference",
-            "GCF_002854065_1"
-          ],
-          "theme": "light",
-          "thread_mode": "reference-flow",
-          "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based",
-          "coloring_explanation": {
-            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
-            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
-          }
-        }
-      },
-      {
-        "view": "reference-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/reference_pairs/reference-vs-GCF_001900355_1.png",
         "subject": "reference",
         "comparisons": [
@@ -168,6 +129,45 @@
           "row_order": [
             "reference",
             "GCF_001900355_1"
+          ],
+          "theme": "light",
+          "thread_mode": "reference-flow",
+          "color_assignment": "largest-contigs-first",
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
+          }
+        }
+      },
+      {
+        "view": "reference-pairs",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/reference_pairs/reference-vs-GCF_002854065_1.png",
+        "subject": "reference",
+        "comparisons": [
+          "GCF_002854065_1"
+        ],
+        "render": {
+          "subject_contig_colors": {
+            "reference": {
+              "NC_000913.3": "#0072B2"
+            }
+          },
+          "legend_contig_colors": {
+            "NC_000913.3": "#0072B2"
+          },
+          "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from NC_000913.3 to comparison contigs using sequence alignments.",
+          "colored_subjects": [
+            "reference"
+          ],
+          "distinct_subject_contig_colors": 1,
+          "fallback_subject_contigs": 0,
+          "legend_rows": 1,
+          "scale_bar_bp": 2000000,
+          "row_order": [
+            "reference",
+            "GCF_002854065_1"
           ],
           "theme": "light",
           "thread_mode": "reference-flow",
@@ -220,45 +220,6 @@
       },
       {
         "view": "all-pairs",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/all_pairs/reference-vs-GCF_002854065_1.png",
-        "subject": "reference",
-        "comparisons": [
-          "GCF_002854065_1"
-        ],
-        "render": {
-          "subject_contig_colors": {
-            "reference": {
-              "NC_000913.3": "#0072B2"
-            }
-          },
-          "legend_contig_colors": {
-            "NC_000913.3": "#0072B2"
-          },
-          "legend_subject": "reference",
-          "legend_note": "Reference-based colors propagated from NC_000913.3 to comparison contigs using sequence alignments.",
-          "colored_subjects": [
-            "reference"
-          ],
-          "distinct_subject_contig_colors": 1,
-          "fallback_subject_contigs": 0,
-          "legend_rows": 1,
-          "scale_bar_bp": 2000000,
-          "row_order": [
-            "reference",
-            "GCF_002854065_1"
-          ],
-          "theme": "light",
-          "thread_mode": "reference-flow",
-          "color_assignment": "largest-contigs-first",
-          "comparison_contig_coloring": "reference-based",
-          "coloring_explanation": {
-            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
-            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
-          }
-        }
-      },
-      {
-        "view": "all-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/all_pairs/reference-vs-GCF_001900355_1.png",
         "subject": "reference",
         "comparisons": [
@@ -298,20 +259,15 @@
       },
       {
         "view": "all-pairs",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/all_pairs/GCF_003073835_1-vs-GCF_002854065_1.png",
-        "subject": "GCF_003073835_1",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/all_pairs/reference-vs-GCF_002854065_1.png",
+        "subject": "reference",
         "comparisons": [
           "GCF_002854065_1"
         ],
         "render": {
           "subject_contig_colors": {
-            "GCF_003073835_1": {
-              "NZ_CP029115.1": "#0072B2",
-              "NZ_CP029118.1": "#D55E00",
-              "NZ_CP029117.1": "#009E73",
-              "NZ_CP029113.1": "#CC79A7",
-              "NZ_CP029119.1": "#C9B000",
-              "remaining_contigs_4": "#b8b8b8"
+            "reference": {
+              "NC_000913.3": "#0072B2"
             }
           },
           "legend_contig_colors": {
@@ -320,23 +276,23 @@
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from NC_000913.3 to comparison contigs using sequence alignments.",
           "colored_subjects": [
-            "GCF_003073835_1"
+            "reference"
           ],
           "distinct_subject_contig_colors": 1,
           "fallback_subject_contigs": 0,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
           "row_order": [
-            "GCF_003073835_1",
+            "reference",
             "GCF_002854065_1"
           ],
           "theme": "light",
-          "thread_mode": "subject-local",
+          "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
           "comparison_contig_coloring": "reference-based",
           "coloring_explanation": {
             "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
-            "ribbons": "Ribbons use the upper genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when that upper region has no reference-based paint."
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
           }
         }
       },
@@ -386,20 +342,20 @@
       },
       {
         "view": "all-pairs",
-        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/all_pairs/GCF_002854065_1-vs-GCF_001900355_1.png",
-        "subject": "GCF_002854065_1",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/all_pairs/GCF_003073835_1-vs-GCF_002854065_1.png",
+        "subject": "GCF_003073835_1",
         "comparisons": [
-          "GCF_001900355_1"
+          "GCF_002854065_1"
         ],
         "render": {
           "subject_contig_colors": {
-            "GCF_002854065_1": {
-              "NZ_CP024147.1": "#0072B2",
-              "NZ_CP024150.1": "#D55E00",
-              "NZ_CP024153.1": "#009E73",
-              "NZ_CP024151.1": "#CC79A7",
-              "NZ_CP024152.1": "#C9B000",
-              "remaining_contigs_3": "#b8b8b8"
+            "GCF_003073835_1": {
+              "NZ_CP029115.1": "#0072B2",
+              "NZ_CP029118.1": "#D55E00",
+              "NZ_CP029117.1": "#009E73",
+              "NZ_CP029113.1": "#CC79A7",
+              "NZ_CP029119.1": "#C9B000",
+              "remaining_contigs_4": "#b8b8b8"
             }
           },
           "legend_contig_colors": {
@@ -408,15 +364,54 @@
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from NC_000913.3 to comparison contigs using sequence alignments.",
           "colored_subjects": [
-            "GCF_002854065_1"
+            "GCF_003073835_1"
           ],
           "distinct_subject_contig_colors": 1,
           "fallback_subject_contigs": 0,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
           "row_order": [
-            "GCF_002854065_1",
+            "GCF_003073835_1",
+            "GCF_002854065_1"
+          ],
+          "theme": "light",
+          "thread_mode": "subject-local",
+          "color_assignment": "largest-contigs-first",
+          "comparison_contig_coloring": "reference-based",
+          "coloring_explanation": {
+            "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
+            "ribbons": "Ribbons use the upper genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when that upper region has no reference-based paint."
+          }
+        }
+      },
+      {
+        "view": "all-pairs",
+        "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/ecoli_complete_reference/all_pairs/GCF_001900355_1-vs-GCF_002854065_1.png",
+        "subject": "GCF_001900355_1",
+        "comparisons": [
+          "GCF_002854065_1"
+        ],
+        "render": {
+          "subject_contig_colors": {
+            "GCF_001900355_1": {
+              "NZ_CP010133.1": "#0072B2"
+            }
+          },
+          "legend_contig_colors": {
+            "NC_000913.3": "#0072B2"
+          },
+          "legend_subject": "reference",
+          "legend_note": "Reference-based colors propagated from NC_000913.3 to comparison contigs using sequence alignments.",
+          "colored_subjects": [
             "GCF_001900355_1"
+          ],
+          "distinct_subject_contig_colors": 1,
+          "fallback_subject_contigs": 0,
+          "legend_rows": 1,
+          "scale_bar_bp": 2000000,
+          "row_order": [
+            "GCF_001900355_1",
+            "GCF_002854065_1"
           ],
           "theme": "light",
           "thread_mode": "subject-local",
@@ -434,8 +429,8 @@
         "subject": "reference",
         "comparisons": [
           "GCF_003073835_1",
-          "GCF_002854065_1",
-          "GCF_001900355_1"
+          "GCF_001900355_1",
+          "GCF_002854065_1"
         ],
         "render": {
           "subject_contig_colors": {
@@ -458,8 +453,8 @@
           "row_order": [
             "reference",
             "GCF_003073835_1",
-            "GCF_002854065_1",
-            "GCF_001900355_1"
+            "GCF_001900355_1",
+            "GCF_002854065_1"
           ],
           "theme": "light",
           "thread_mode": "reference-flow",
@@ -482,6 +477,7 @@
     ],
     "format": "png",
     "theme": "light",
+    "genome_order": "reference-similarity",
     "reference_role_label": "reference",
     "reference_segments": null,
     "width": 13.0,
@@ -512,12 +508,36 @@
     "ribbons": "When the true reference is the upper genome in a join, ribbons use the reference contig color in that aligned region. When a non-reference genome is the upper genome, ribbons use that genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when no reference-based paint is present there."
   },
   "ordering": {
-    "method": "input",
-    "genome_order": [
-      "reference",
+    "method": "reference-similarity",
+    "input_comparison_order": [
       "GCF_003073835_1",
       "GCF_002854065_1",
       "GCF_001900355_1"
+    ],
+    "comparison_order": [
+      "GCF_003073835_1",
+      "GCF_001900355_1",
+      "GCF_002854065_1"
+    ],
+    "reference_similarity": [
+      {
+        "name": "GCF_003073835_1",
+        "ani": 0.828546
+      },
+      {
+        "name": "GCF_001900355_1",
+        "ani": 0.715853
+      },
+      {
+        "name": "GCF_002854065_1",
+        "ani": 0.62533
+      }
+    ],
+    "genome_order": [
+      "reference",
+      "GCF_003073835_1",
+      "GCF_001900355_1",
+      "GCF_002854065_1"
     ]
   },
   "genomes": [
@@ -584,6 +604,22 @@
       ]
     },
     {
+      "name": "GCF_001900355_1",
+      "display_name": "NZ_CP010133.1",
+      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/ecoli_complete_reference/comparisons/GCF_001900355_1.fasta",
+      "length_bp": 5414571,
+      "contig_count": 1,
+      "remainder_contig_count": 0,
+      "contigs": [
+        {
+          "name": "NZ_CP010133.1",
+          "length_bp": 5414571,
+          "source_count": 1,
+          "is_remainder": false
+        }
+      ]
+    },
+    {
       "name": "GCF_002854065_1",
       "display_name": "NZ_CP024147.1",
       "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/ecoli_complete_reference/comparisons/GCF_002854065_1.fasta",
@@ -628,22 +664,6 @@
           "is_remainder": true
         }
       ]
-    },
-    {
-      "name": "GCF_001900355_1",
-      "display_name": "NZ_CP010133.1",
-      "path": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/ecoli_complete_reference/comparisons/GCF_001900355_1.fasta",
-      "length_bp": 5414571,
-      "contig_count": 1,
-      "remainder_contig_count": 0,
-      "contigs": [
-        {
-          "name": "NZ_CP010133.1",
-          "length_bp": 5414571,
-          "source_count": 1,
-          "is_remainder": false
-        }
-      ]
     }
   ],
   "alignments": {
@@ -671,14 +691,6 @@
       "matching_bases": 3903637,
       "block_count": 7
     },
-    "GCF_003073835_1.fasta::GCF_002854065_1.fasta": {
-      "subject": "GCF_003073835_1.fasta",
-      "comparison": "GCF_002854065_1.fasta",
-      "ani": 0.607389,
-      "aligned_bases": 5366193,
-      "matching_bases": 3259369,
-      "block_count": 19
-    },
     "GCF_003073835_1.fasta::GCF_001900355_1.fasta": {
       "subject": "GCF_003073835_1.fasta",
       "comparison": "GCF_001900355_1.fasta",
@@ -687,13 +699,21 @@
       "matching_bases": 3871342,
       "block_count": 7
     },
-    "GCF_002854065_1.fasta::GCF_001900355_1.fasta": {
-      "subject": "GCF_002854065_1.fasta",
-      "comparison": "GCF_001900355_1.fasta",
-      "ani": 0.62443,
-      "aligned_bases": 5550837,
-      "matching_bases": 3466110,
-      "block_count": 13
+    "GCF_003073835_1.fasta::GCF_002854065_1.fasta": {
+      "subject": "GCF_003073835_1.fasta",
+      "comparison": "GCF_002854065_1.fasta",
+      "ani": 0.607389,
+      "aligned_bases": 5366193,
+      "matching_bases": 3259369,
+      "block_count": 19
+    },
+    "GCF_001900355_1.fasta::GCF_002854065_1.fasta": {
+      "subject": "GCF_001900355_1.fasta",
+      "comparison": "GCF_002854065_1.fasta",
+      "ani": 0.615919,
+      "aligned_bases": 5117560,
+      "matching_bases": 3152001,
+      "block_count": 6
     }
   },
   "warnings": []

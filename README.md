@@ -1,6 +1,6 @@
 # genome-loom
 
-genome-loom creates comparative genome ribbon plots that show how a reference genome aligns with multiple comparison genomes across overview, pairwise, and neighbor-chain views. The reference remains at the top of the stack, comparison genomes remain in input order, and the figure set changes only which ribbon layer is visible. `genome-loom` preserves genome order, contig order, and contig orientation.
+genome-loom creates comparative genome ribbon plots that show how a reference genome aligns with multiple comparison genomes across overview, pairwise, and neighbor-chain views. The reference remains at the top of the stack, comparison genomes remain in input order by default, and the figure set changes only which ribbon layer is visible. `genome-loom` preserves contig order and contig orientation, and can optionally sort comparison rows by direct similarity to the reference.
 
 | Overview | Reference-Pairs | All-Pairs | Neighbor |
 | :-: | :-: | :-: | :-: |
@@ -9,7 +9,7 @@ genome-loom creates comparative genome ribbon plots that show how a reference ge
 - `overview`: one full-stack figure showing ribbons from the reference to all comparison genomes at once.
 - `reference-pairs`: one two-row figure per reference-to-comparison relationship, showing the reference and one selected comparison genome.
 - `all-pairs`: one two-row figure per genome pair, showing only the two genomes involved in that selected comparison.
-- `neighbor`: one full-stack figure showing ribbons only between adjacent rows in the supplied genome order.
+- `neighbor`: one full-stack figure showing ribbons only between adjacent rows in the selected genome order.
 - Comparison contigs are painted from their relationship to the reference, so the same reference-based color context can carry across the full figure set, including pairwise views where the reference row is not shown.
 - Ribbon color follows the upper genome in each join: when the reference is the upper genome, ribbons use the reference contig color in that aligned region; when a non-reference genome is the upper genome, ribbons use that genome's reference-based painted color in the aligned region, or fall back to the neutral comparison color if no reference-based paint is present there.
 
@@ -115,6 +115,14 @@ python genome_loom.py \
   --outdir results \
   --reference-role-label assembly
 
+# Sort comparison rows by direct similarity to the reference
+python genome_loom.py \
+  --reference ref.fasta \
+  --comparisons comparison_a.fasta comparison_b.fasta comparison_c.fasta \
+  --outdir similarity-ordered-results \
+  --views overview neighbor \
+  --genome-order reference-similarity
+
 # Focus the figure on selected top/reference contigs
 python genome_loom.py \
   --reference assembly.fasta \
@@ -153,6 +161,7 @@ Key options are summarized below; run `python genome_loom.py --help` for the ful
 | `--reference-role-label` | No | `reference` | Optional role-label prefix for the top row; use `none` to omit the prefix. |
 | `--reference-contigs` | No | — | Keep only the named contigs from the top/reference genome. Aliases: `--assembly-contigs`, `--query-contigs`. |
 | `--views` | No | `overview reference-pairs neighbor` | Figure families to generate when `--outdir` is used. |
+| `--genome-order` | No | `input` | Row order for comparison genomes: `input` preserves supplied order; `reference-similarity` places genomes with the highest direct ANI to the reference closest to the reference row. |
 | `--format` | No | `png` | Output format: `png`, `pdf`, or `svg`. |
 | `--theme` | No | `light` | Figure theme: `light` or `dark`. |
 | `--width` / `--height` | No | `12` / `8` | Figure dimensions in inches. |
@@ -226,7 +235,7 @@ The JSON summary includes:
 - input paths and output paths
 - figure-generation settings
 - filtering and alignment settings
-- genome order and per-genome contig summaries
+- genome ordering method, rendered genome order, and per-genome contig summaries
 - one record per generated figure
 - one record per computed pairwise alignment
 - warnings, such as likely crowding in full-stack views
@@ -253,6 +262,34 @@ If `--reference-contigs` is used, only those named contigs from the top/referenc
 ```
 
 Command-line arguments override values loaded from the config file, so a caller can keep a stable base config and customize only a few fields per job.
+
+## Genome Ordering
+
+By default, `--genome-order input` preserves the comparison FASTA order supplied on the command line or read from comparison directories. The reference is always fixed as the top row.
+
+Use `--genome-order reference-similarity` when the full-stack views should place the comparison genomes most similar to the reference closest to the reference row. In this mode, genome-loom computes the direct reference-to-comparison ANI values using the same minimap2 preset and filters as the main run, sorts comparison rows from highest to lowest ANI, and preserves input order for exact ANI ties.
+
+This affects every generated figure family:
+
+- `overview` and `neighbor` use the similarity-sorted row stack.
+- `reference-pairs` are written in the same sorted comparison order.
+- `all-pairs` uses the sorted order when deciding which genome appears above the other in each pair.
+
+The summary JSON records `ordering.method`, `ordering.input_comparison_order`, `ordering.comparison_order`, and `ordering.reference_similarity` so automated callers can see both the supplied order and the rendered order.
+
+Example:
+
+```bash
+python genome_loom.py \
+  --reference examples/case_studies/ecoli_complete_reference/reference.fasta \
+  --comparisons examples/case_studies/ecoli_complete_reference/comparisons/ \
+  --outdir similarity-ordered \
+  --views overview reference-pairs neighbor \
+  --genome-order reference-similarity \
+  --minimap-preset asm10 \
+  --threads 4 \
+  --force
+```
 
 ## Alignment Settings
 

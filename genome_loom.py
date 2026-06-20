@@ -23,9 +23,10 @@ from scripts.fasta import (
 from scripts.summary import write_summary
 
 
-VERSION = "0.3.1"
+VERSION = "0.4.0"
 VIEW_CHOICES = ("overview", "reference-pairs", "all-pairs", "neighbor")
 MINIMAP2_PRESETS = ("asm5", "asm10", "asm20")
+GENOME_ORDER_CHOICES = ("input", "reference-similarity")
 FULL_STACK_VIEWS = {"overview", "neighbor"}
 
 
@@ -381,6 +382,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Figure sets to generate when --outdir is used.",
     )
     parser.add_argument(
+        "--genome-order",
+        choices=GENOME_ORDER_CHOICES,
+        default="input",
+        help=(
+            "Row order for comparison genomes. Use input to preserve the supplied "
+            "comparison order, or reference-similarity to place genomes with the "
+            "highest direct ANI to the reference closest to the reference row."
+        ),
+    )
+    parser.add_argument(
         "--format", choices=["png", "pdf", "svg"], default="png", help="Output format."
     )
     parser.add_argument(
@@ -656,23 +667,6 @@ def main(argv: list[str] | None = None) -> int:
             args.reference_segments if args.reference_segments else None
         )
 
-        ordered_paths = [reference_path, *comparison_paths]
-        ordered_genomes = [genomes_by_path[p] for p in ordered_paths]
-        comparison_genomes = [genomes_by_path[p] for p in comparison_paths]
-        recommended_limit = _recommended_full_stack_limit(args.height)
-        if (
-            set(args.views) & FULL_STACK_VIEWS
-            and len(ordered_genomes) > recommended_limit
-        ):
-            warnings.append(
-                "Full-stack views may look crowded with "
-                f"{len(ordered_genomes)} genomes at {args.width:g}x{args.height:g} in. "
-                f"Recommended total for overview/neighbor at this height is about "
-                f"{recommended_limit} genomes or fewer; consider a taller figure, fewer "
-                "genomes, or pairwise-only output."
-            )
-            print(f"Warning: {warnings[-1]}", file=sys.stderr)
-
         def get_alignment(
             subject_path: Path, comparison_path: Path
         ) -> PairwiseAlignment:
@@ -692,6 +686,42 @@ def main(argv: list[str] | None = None) -> int:
                     comparison=comparison_path,
                 )
             return alignment_cache[key]
+
+        reference_similarity_scores: dict[Path, float] = {}
+        if args.genome_order == "reference-similarity":
+            for path in comparison_paths:
+                reference_similarity_scores[path] = get_alignment(
+                    reference_path, path
+                ).ani
+            ordered_comparison_paths = [
+                path
+                for _index, path in sorted(
+                    enumerate(comparison_paths),
+                    key=lambda item: (
+                        -reference_similarity_scores[item[1]],
+                        item[0],
+                    ),
+                )
+            ]
+        else:
+            ordered_comparison_paths = comparison_paths[:]
+
+        ordered_paths = [reference_path, *ordered_comparison_paths]
+        ordered_genomes = [genomes_by_path[p] for p in ordered_paths]
+        comparison_genomes = [genomes_by_path[p] for p in ordered_comparison_paths]
+        recommended_limit = _recommended_full_stack_limit(args.height)
+        if (
+            set(args.views) & FULL_STACK_VIEWS
+            and len(ordered_genomes) > recommended_limit
+        ):
+            warnings.append(
+                "Full-stack views may look crowded with "
+                f"{len(ordered_genomes)} genomes at {args.width:g}x{args.height:g} in. "
+                f"Recommended total for overview/neighbor at this height is about "
+                f"{recommended_limit} genomes or fewer; consider a taller figure, fewer "
+                "genomes, or pairwise-only output."
+            )
+            print(f"Warning: {warnings[-1]}", file=sys.stderr)
 
         from scripts.render import RibbonLayer
         from scripts.render import ColorInterval, DEFAULT_COLORS, THEMES, RibbonSegment
@@ -927,7 +957,7 @@ def main(argv: list[str] | None = None) -> int:
             nonlocal _global_reference_flow
             if _global_reference_flow is None:
                 _global_reference_flow = build_reference_flow(
-                    [(reference_path, path) for path in comparison_paths]
+                    [(reference_path, path) for path in ordered_comparison_paths]
                 )
             return _global_reference_flow
 
@@ -998,7 +1028,7 @@ def main(argv: list[str] | None = None) -> int:
 
             if "reference-pairs" in selected:
                 view_dir = outdir / "reference_pairs"
-                for genome, path in zip(comparison_genomes, comparison_paths):
+                for genome, path in zip(comparison_genomes, ordered_comparison_paths):
                     output = (
                         view_dir
                         / f"{_safe_name(reference.name)}-vs-{_safe_name(genome.name)}.{ext}"
@@ -1134,6 +1164,7 @@ def main(argv: list[str] | None = None) -> int:
                     "views": args.views,
                     "format": args.format,
                     "theme": args.theme,
+                    "genome_order": args.genome_order,
                     "reference_role_label": reference_role_label or None,
                     "reference_segments": applied_reference_segments,
                     "width": args.width,
@@ -1172,7 +1203,21 @@ def main(argv: list[str] | None = None) -> int:
                     ),
                 },
                 "ordering": {
-                    "method": "input",
+                    "method": args.genome_order,
+                    "input_comparison_order": [
+                        genomes_by_path[p].name for p in comparison_paths
+                    ],
+                    "comparison_order": [
+                        genomes_by_path[p].name for p in ordered_comparison_paths
+                    ],
+                    "reference_similarity": [
+                        {
+                            "name": genomes_by_path[p].name,
+                            "ani": round(reference_similarity_scores[p], 6),
+                        }
+                        for p in ordered_comparison_paths
+                        if p in reference_similarity_scores
+                    ],
                     "genome_order": [g.name for g in ordered_genomes],
                 },
                 "genomes": [_summary_for_genome(g) for g in ordered_genomes],

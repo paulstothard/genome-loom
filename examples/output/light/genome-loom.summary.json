@@ -1,8 +1,8 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-06-20T21:40:06.317863+00:00",
-  "version": "0.3.1",
+  "generated": "2026-06-20T22:17:47.665131+00:00",
+  "version": "0.4.0",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/data/reference.fasta",
     "comparisons": [
@@ -577,6 +577,7 @@
     ],
     "format": "png",
     "theme": "light",
+    "genome_order": "reference-similarity",
     "reference_role_label": "reference",
     "reference_segments": null,
     "width": 12.0,
@@ -607,7 +608,31 @@
     "ribbons": "When the true reference is the upper genome in a join, ribbons use the reference contig color in that aligned region. When a non-reference genome is the upper genome, ribbons use that genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when no reference-based paint is present there."
   },
   "ordering": {
-    "method": "input",
+    "method": "reference-similarity",
+    "input_comparison_order": [
+      "comparison_alpha",
+      "comparison_beta",
+      "comparison_gamma"
+    ],
+    "comparison_order": [
+      "comparison_alpha",
+      "comparison_beta",
+      "comparison_gamma"
+    ],
+    "reference_similarity": [
+      {
+        "name": "comparison_alpha",
+        "ani": 0.772638
+      },
+      {
+        "name": "comparison_beta",
+        "ani": 0.771777
+      },
+      {
+        "name": "comparison_gamma",
+        "ani": 0.766823
+      }
+    ],
     "genome_order": [
       "reference",
       "comparison_alpha",
