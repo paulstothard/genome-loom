@@ -13,7 +13,6 @@ Treat the CLI, view names, figure paths, summary JSON, and alignment/filtering s
 - Main command: `python genome_loom.py`
 - Alignment logic: `scripts/align.py`
 - FASTA handling: `scripts/fasta.py`
-- Ordering/layout helpers: `scripts/ordering.py`
 - Rendering: `scripts/render.py`
 - Summary helpers: `scripts/summary.py`
 - Tests: `tests/`
