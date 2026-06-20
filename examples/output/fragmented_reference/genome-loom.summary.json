@@ -1,7 +1,7 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-06-20T20:36:00.414083+00:00",
+  "generated": "2026-06-20T21:37:50.922385+00:00",
   "version": "0.3.0",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/reference.fasta",

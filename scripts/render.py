@@ -573,33 +573,7 @@ def render_loom(
         _mix_colors("#8b1e3f", theme.background, 0.20), alpha=0.70
     )
 
-    # Ribbons first, so genome blocks and colored landing zones sit above them.
-    visible_ribbon_intervals: dict[str, dict[str, list[ColorInterval]]] = {}
-
-    def add_visible_ribbon_interval(
-        *,
-        genome_name: str,
-        contig_name: str,
-        start: int,
-        end: int,
-        color: str,
-        origin: str,
-    ) -> None:
-        if end <= start:
-            return
-        visible_ribbon_intervals.setdefault(genome_name, {}).setdefault(
-            contig_name, []
-        ).append(
-            ColorInterval(
-                genome=genome_name,
-                contig=contig_name,
-                start=start,
-                end=end,
-                color=color,
-                origin=origin,
-            )
-        )
-
+    # Ribbons first, so genome blocks and propagated color intervals sit above them.
     if ribbon_segments is not None:
         ribbon_items = []
         for segment in ribbon_segments:
@@ -626,22 +600,6 @@ def render_loom(
         for _sort_key, segment, rx1, rx2, cx1, cx2 in sorted(
             ribbon_items, key=lambda item: item[0]
         ):
-            add_visible_ribbon_interval(
-                genome_name=segment.subject,
-                contig_name=segment.subject_contig,
-                start=segment.subject_start,
-                end=segment.subject_end,
-                color=segment.color,
-                origin=segment.origin,
-            )
-            add_visible_ribbon_interval(
-                genome_name=segment.comparison,
-                contig_name=segment.comparison_contig,
-                start=segment.comparison_start,
-                end=segment.comparison_end,
-                color=segment.color,
-                origin=segment.origin,
-            )
             path = _ribbon_path(
                 rx1,
                 rx2,
@@ -809,24 +767,6 @@ def render_loom(
                             else 0.30
                         ),
                         zorder=4,
-                    )
-                )
-            for interval in visible_ribbon_intervals.get(genome.name, {}).get(
-                contig.name, []
-            ):
-                x0 = _pos_to_x(layout, interval.start)
-                x1 = _pos_to_x(layout, interval.end)
-                if x1 <= x0:
-                    continue
-                ax.add_patch(
-                    patches.Rectangle(
-                        (x0, y - block_h / 2),
-                        x1 - x0,
-                        block_h,
-                        facecolor=interval.color,
-                        edgecolor="none",
-                        alpha=0.96,
-                        zorder=5,
                     )
                 )
 
