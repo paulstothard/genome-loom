@@ -13,6 +13,7 @@ mkdir -p "${DATA_DIR}" "${OUT_DIR}"
 "${PYTHON[@]}" scripts/make_demo_data.py --out-dir "${DATA_DIR}"
 
 rm -rf "${OUT_DIR}/light" "${OUT_DIR}/dark"
+rm -rf "${OUT_DIR}/continuous_light" "${OUT_DIR}/continuous_dark"
 rm -rf "${OUT_DIR}/ecoli_complete_reference"
 rm -rf "${OUT_DIR}/fragmented_reference"
 
@@ -57,6 +58,52 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   --min-block-length 800 \
   --threads 2 \
   --title "Genome Loom Demo"
+
+"${PYTHON[@]}" genome_loom.py \
+  --reference "${DATA_DIR}/reference.fasta" \
+  --comparisons \
+  "${DATA_DIR}/comparison_alpha.fasta" \
+  "${DATA_DIR}/comparison_beta.fasta" \
+  "${DATA_DIR}/comparison_gamma.fasta" \
+  --outdir "${OUT_DIR}/continuous_light" \
+  --summary-output "${OUT_DIR}/continuous_light/genome-loom.summary.json" \
+  --views neighbor \
+  --genome-order reference-similarity \
+  --reference-segments 8 \
+  --reference-palette continuous \
+  --format png \
+  --theme light \
+  --width 12 \
+  --height 8 \
+  --dpi 180 \
+  --min-contig-length 1000 \
+  --max-contigs 0 \
+  --min-block-length 800 \
+  --threads 2 \
+  --title "Continuous Palette Demo"
+
+"${PYTHON[@]}" genome_loom.py \
+  --reference "${DATA_DIR}/reference.fasta" \
+  --comparisons \
+  "${DATA_DIR}/comparison_alpha.fasta" \
+  "${DATA_DIR}/comparison_beta.fasta" \
+  "${DATA_DIR}/comparison_gamma.fasta" \
+  --outdir "${OUT_DIR}/continuous_dark" \
+  --summary-output "${OUT_DIR}/continuous_dark/genome-loom.summary.json" \
+  --views neighbor \
+  --genome-order reference-similarity \
+  --reference-segments 8 \
+  --reference-palette continuous \
+  --format png \
+  --theme dark \
+  --width 12 \
+  --height 8 \
+  --dpi 180 \
+  --min-contig-length 1000 \
+  --max-contigs 0 \
+  --min-block-length 800 \
+  --threads 2 \
+  --title "Continuous Palette Demo"
 
 "${PYTHON[@]}" genome_loom.py \
   --reference "${EXAMPLES_DIR}/case_studies/ecoli_complete_reference/reference.fasta" \
@@ -110,4 +157,4 @@ rm -rf "${OUT_DIR}/fragmented_reference"
   "GCF_002854065_1=NZ_CP024147.1" \
   --title "Most-Contig Local Example"
 
-echo "Examples written to ${OUT_DIR}/light, ${OUT_DIR}/dark, ${OUT_DIR}/ecoli_complete_reference, and ${OUT_DIR}/fragmented_reference"
+echo "Examples written to ${OUT_DIR}/light, ${OUT_DIR}/dark, ${OUT_DIR}/continuous_light, ${OUT_DIR}/continuous_dark, ${OUT_DIR}/ecoli_complete_reference, and ${OUT_DIR}/fragmented_reference"

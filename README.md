@@ -345,6 +345,10 @@ By default, reference-flow coloring is contig-based: each visible reference cont
 
 The default `--reference-palette categorical` assigns visually distinct colors. Use `--reference-palette continuous` when the reference should read more like an ordered color ramp: neighboring reference contigs or segments receive related colors, and those related colors propagate through ribbons and comparison bars. The continuous palette is theme-specific, with a darker, luminous palette for `--theme dark` and a stronger high-contrast palette for `--theme light`.
 
+| Continuous Palette, Light Theme | Continuous Palette, Dark Theme |
+| :-: | :-: |
+| [![continuous light palette neighbor-chain example](examples/output/continuous_light/neighbor/neighbor-chain.png)](examples/output/continuous_light/neighbor/neighbor-chain.png) | [![continuous dark palette neighbor-chain example](examples/output/continuous_dark/neighbor/neighbor-chain.png)](examples/output/continuous_dark/neighbor/neighbor-chain.png) |
+
 Segmenting works for both single-contig and multicontig references. For a multicontig reference, the segment boundaries are computed across the concatenated visible reference length, using the displayed contig order. A segment can therefore end on one contig and continue on the next; genome-loom records and renders that as separate per-contig intervals with the same segment label and color.
 
 For example, this command renders a neighbor-chain figure where a single complete reference chromosome is divided into ten colored segments:
@@ -471,6 +475,8 @@ examples/case_studies/ecoli_complete_reference/
 examples/case_studies/fragmented_reference/
 examples/output/light/
 examples/output/dark/
+examples/output/continuous_light/
+examples/output/continuous_dark/
 examples/output/ecoli_complete_reference/
 examples/output/fragmented_reference/
 ```

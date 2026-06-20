@@ -23,7 +23,7 @@ from scripts.fasta import (
 from scripts.summary import write_summary
 
 
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 VIEW_CHOICES = ("overview", "reference-pairs", "all-pairs", "neighbor")
 MINIMAP2_PRESETS = ("asm5", "asm10", "asm20")
 GENOME_ORDER_CHOICES = ("input", "reference-similarity")
