@@ -23,7 +23,7 @@ from scripts.fasta import (
 from scripts.summary import write_summary
 
 
-VERSION = "0.2.5"
+VERSION = "0.3.0"
 VIEW_CHOICES = ("overview", "reference-pairs", "all-pairs", "neighbor")
 MINIMAP2_PRESETS = ("asm5", "asm10", "asm20")
 FULL_STACK_VIEWS = {"overview", "neighbor"}
@@ -224,6 +224,47 @@ def _recommended_full_stack_limit(height_in: float) -> int:
     return max(4, int(height_in / 0.6))
 
 
+def _reference_segment_intervals(
+    *,
+    reference: Genome,
+    segment_count: int,
+    colors: list[str],
+) -> list:
+    """Split the visible reference into equal-length colored intervals."""
+    intervals = []
+    total_length = sum(contig.length for contig in reference.contigs)
+    if total_length <= 0:
+        return intervals
+
+    contig_offsets: list[tuple[str, int, int]] = []
+    offset = 0
+    for contig in reference.contigs:
+        contig_offsets.append((contig.name, offset, offset + contig.length))
+        offset += contig.length
+
+    for index in range(segment_count):
+        segment_start = round(index * total_length / segment_count)
+        segment_end = round((index + 1) * total_length / segment_count)
+        if segment_end <= segment_start:
+            continue
+        for contig_name, contig_start, contig_end in contig_offsets:
+            start = max(segment_start, contig_start)
+            end = min(segment_end, contig_end)
+            if end <= start:
+                continue
+            intervals.append(
+                {
+                    "genome": reference.name,
+                    "contig": contig_name,
+                    "start": start - contig_start,
+                    "end": end - contig_start,
+                    "color": colors[index % len(colors)],
+                    "origin": f"segment {index + 1}",
+                }
+            )
+    return intervals
+
+
 def _write_failure_summary(
     summary_path: Path,
     *,
@@ -367,6 +408,15 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--reference-segments",
+        type=_nonnegative_int,
+        default=0,
+        help=(
+            "Split the visible reference into this many colored segments. "
+            "Use 0 to color by reference contig instead."
+        ),
+    )
+    parser.add_argument(
         "--min-block-length",
         type=_nonnegative_int,
         default=500,
@@ -491,6 +541,8 @@ def main(argv: list[str] | None = None) -> int:
         )
     if args.max_contigs == 1 or args.max_contigs < 0:
         parser.error("--max-contigs must be 0 or at least 2")
+    if args.reference_segments == 1:
+        parser.error("--reference-segments must be 0 or at least 2")
     try:
         display_name_overrides = _parse_display_name_pairs(args.display_names)
     except argparse.ArgumentTypeError as exc:
@@ -596,6 +648,10 @@ def main(argv: list[str] | None = None) -> int:
         for index, path in enumerate(comparison_paths, start=1):
             genomes_by_path[path] = prepare_genome(path, index)
 
+        applied_reference_segments = (
+            args.reference_segments if args.reference_segments else None
+        )
+
         ordered_paths = [reference_path, *comparison_paths]
         ordered_genomes = [genomes_by_path[p] for p in ordered_paths]
         comparison_genomes = [genomes_by_path[p] for p in comparison_paths]
@@ -666,6 +722,20 @@ def main(argv: list[str] | None = None) -> int:
                 reference_colors[contig.name] = theme_fallback
 
         def initial_reference_intervals() -> dict[str, dict[str, list[ColorInterval]]]:
+            if applied_reference_segments:
+                segmented: dict[str, dict[str, list[ColorInterval]]] = {
+                    reference.name: {}
+                }
+                for interval in _reference_segment_intervals(
+                    reference=reference,
+                    segment_count=applied_reference_segments,
+                    colors=DEFAULT_COLORS,
+                ):
+                    color_interval = ColorInterval(**interval)
+                    segmented[reference.name].setdefault(
+                        color_interval.contig, []
+                    ).append(color_interval)
+                return segmented
             return {
                 reference.name: {
                     contig.name: [
@@ -698,6 +768,67 @@ def main(argv: list[str] | None = None) -> int:
                 if best is None or overlap > best[0]:
                     best = (overlap, interval)
             return best[1] if best else None
+
+        def thread_slices(
+            intervals: dict[str, dict[str, list[ColorInterval]]],
+            genome_name: str,
+            contig_name: str,
+            start: int,
+            end: int,
+        ) -> list[tuple[int, int, ColorInterval]]:
+            candidates = [
+                interval
+                for interval in intervals.get(genome_name, {}).get(contig_name, [])
+                if _overlap_len(start, end, interval.start, interval.end) > 0
+            ]
+            if not candidates:
+                return []
+            boundaries = {start, end}
+            for interval in candidates:
+                boundaries.add(max(start, interval.start))
+                boundaries.add(min(end, interval.end))
+            ordered = sorted(boundaries)
+            slices: list[tuple[int, int, ColorInterval]] = []
+            for slice_start, slice_end in zip(ordered, ordered[1:]):
+                if slice_end <= slice_start:
+                    continue
+                thread = dominant_thread(
+                    intervals,
+                    genome_name,
+                    contig_name,
+                    slice_start,
+                    slice_end,
+                )
+                if thread is not None:
+                    slices.append((slice_start, slice_end, thread))
+            return slices
+
+        def projected_comparison_span(block, subject_start: int, subject_end: int):
+            subject_len = max(1, block.reference_end - block.reference_start)
+            comparison_len = block.comparison_end - block.comparison_start
+            if block.strand == "-":
+                comparison_start = block.comparison_start + round(
+                    (block.reference_end - subject_end)
+                    / subject_len
+                    * comparison_len
+                )
+                comparison_end = block.comparison_start + round(
+                    (block.reference_end - subject_start)
+                    / subject_len
+                    * comparison_len
+                )
+            else:
+                comparison_start = block.comparison_start + round(
+                    (subject_start - block.reference_start)
+                    / subject_len
+                    * comparison_len
+                )
+                comparison_end = block.comparison_start + round(
+                    (subject_end - block.reference_start)
+                    / subject_len
+                    * comparison_len
+                )
+            return sorted((comparison_start, comparison_end))
 
         def add_interval(
             intervals: dict[str, dict[str, list[ColorInterval]]],
@@ -743,39 +874,43 @@ def main(argv: list[str] | None = None) -> int:
                 comparison = genomes_by_path[comparison_path]
                 aln = get_alignment(subject_path, comparison_path)
                 for block in aln.blocks:
-                    thread = dominant_thread(
+                    slices = thread_slices(
                         intervals,
                         subject.name,
                         block.reference_contig,
                         block.reference_start,
                         block.reference_end,
                     )
-                    if thread is None:
-                        continue
-                    segments.append(
-                        RibbonSegment(
-                            subject=subject.name,
-                            comparison=comparison.name,
-                            subject_contig=block.reference_contig,
-                            subject_start=block.reference_start,
-                            subject_end=block.reference_end,
-                            comparison_contig=block.comparison_contig,
-                            comparison_start=block.comparison_start,
-                            comparison_end=block.comparison_end,
-                            strand=block.strand,
-                            color=thread.color,
-                            origin=thread.origin,
+                    for subject_start, subject_end, thread in slices:
+                        comparison_start, comparison_end = projected_comparison_span(
+                            block, subject_start, subject_end
                         )
-                    )
-                    add_interval(
-                        intervals,
-                        comparison.name,
-                        block.comparison_contig,
-                        block.comparison_start,
-                        block.comparison_end,
-                        thread.color,
-                        thread.origin,
-                    )
+                        if comparison_end <= comparison_start:
+                            continue
+                        segments.append(
+                            RibbonSegment(
+                                subject=subject.name,
+                                comparison=comparison.name,
+                                subject_contig=block.reference_contig,
+                                subject_start=subject_start,
+                                subject_end=subject_end,
+                                comparison_contig=block.comparison_contig,
+                                comparison_start=comparison_start,
+                                comparison_end=comparison_end,
+                                strand=block.strand,
+                                color=thread.color,
+                                origin=thread.origin,
+                            )
+                        )
+                        add_interval(
+                            intervals,
+                            comparison.name,
+                            block.comparison_contig,
+                            comparison_start,
+                            comparison_end,
+                            thread.color,
+                            thread.origin,
+                        )
             return segments, intervals
 
         _global_reference_flow: (
@@ -947,19 +1082,16 @@ def main(argv: list[str] | None = None) -> int:
             if "neighbor" in selected:
                 view_dir = outdir / "neighbor"
                 output = view_dir / f"neighbor-chain.{ext}"
-                _global_segments, intervals = global_reference_flow()
-                layers = [
-                    make_layer(subject_path, comparison_path)
-                    for subject_path, comparison_path in zip(
-                        ordered_paths, ordered_paths[1:]
-                    )
-                ]
+                neighbor_segments, intervals = build_reference_flow(
+                    list(zip(ordered_paths, ordered_paths[1:]))
+                )
                 meta = _render_one(
                     subject=reference,
                     comparisons=comparison_genomes,
                     alignments={},
                     context_genomes=ordered_genomes,
-                    ribbon_layers=layers,
+                    ribbon_layers=[],
+                    ribbon_segments=neighbor_segments,
                     color_intervals=intervals,
                     full_color_genomes={reference.name},
                     legend_genome=reference,
@@ -982,6 +1114,7 @@ def main(argv: list[str] | None = None) -> int:
                     "reference": str(reference_path),
                     "comparisons": [str(p) for p in comparison_paths],
                     "reference_contigs": selected_reference_contigs or None,
+                    "reference_segments": args.reference_segments or None,
                 },
                 "outputs": {
                     "outdir": str(outdir),
@@ -997,12 +1130,14 @@ def main(argv: list[str] | None = None) -> int:
                     "format": args.format,
                     "theme": args.theme,
                     "reference_role_label": reference_role_label or None,
+                    "reference_segments": applied_reference_segments,
                     "width": args.width,
                     "height": args.height,
                     "dpi": args.dpi,
                 },
                 "filters": {
                     "reference_contigs": selected_reference_contigs or None,
+                    "reference_segments": applied_reference_segments,
                     "min_contig_length": args.min_contig_length,
                     "max_contigs": args.max_contigs,
                     "min_block_length": args.min_block_length,

@@ -214,6 +214,32 @@ def _contig_colors_by_size(genome: Genome, fallback_color: str) -> dict[str, str
     return colors
 
 
+def _legend_entries_from_intervals(
+    genome: Genome,
+    intervals: dict[str, dict[str, list[ColorInterval]]],
+) -> list[tuple[str, str, str]]:
+    entries: list[tuple[str, str, str]] = []
+    seen: set[str] = set()
+    for contig in genome.contigs:
+        contig_intervals = sorted(
+            intervals.get(genome.name, {}).get(contig.name, []),
+            key=lambda item: (item.start, item.end, item.origin),
+        )
+        for interval in contig_intervals:
+            key = f"{interval.origin}\0{interval.color}"
+            if key in seen:
+                continue
+            seen.add(key)
+            entries.append(
+                (
+                    interval.origin,
+                    _shorten(interval.origin.replace("_", " "), 24),
+                    interval.color,
+                )
+            )
+    return entries
+
+
 def _has_intervals(
     intervals: dict[str, dict[str, list[ColorInterval]]], genome_name: str
 ) -> bool:
@@ -458,25 +484,38 @@ def render_loom(
     legend_colors = subject_colors.get(legend_subject.name)
     if legend_colors is None:
         legend_colors = _contig_colors_by_size(legend_subject, theme.fallback_contig)
-    ranked_legend_contigs = _ranked_contigs_by_size(legend_subject)
-    distinct_color_count = min(len(ranked_legend_contigs), len(DEFAULT_COLORS))
-    legend_entries = [
-        (contig.name, _shorten(contig.name, 24), legend_colors[contig.name])
-        for _original_index, contig in ranked_legend_contigs[:distinct_color_count]
-    ]
-    overflow_count = max(0, len(ranked_legend_contigs) - distinct_color_count)
-    remainder_count = sum(
-        contig.source_count for contig in legend_subject.contigs if contig.is_remainder
+    interval_legend_entries = _legend_entries_from_intervals(
+        legend_subject, color_intervals
     )
-    fallback_count = overflow_count + remainder_count
-    if fallback_count:
-        legend_entries.append(
-            (
-                "other_contigs",
-                f"other contigs ({fallback_count})",
-                theme.fallback_contig,
-            )
+    if interval_legend_entries and any(
+        raw_label not in {contig.name for contig in legend_subject.contigs}
+        for raw_label, _display_label, _color in interval_legend_entries
+    ):
+        legend_entries = interval_legend_entries
+        distinct_color_count = len(legend_entries)
+        fallback_count = 0
+    else:
+        ranked_legend_contigs = _ranked_contigs_by_size(legend_subject)
+        distinct_color_count = min(len(ranked_legend_contigs), len(DEFAULT_COLORS))
+        legend_entries = [
+            (contig.name, _shorten(contig.name, 24), legend_colors[contig.name])
+            for _original_index, contig in ranked_legend_contigs[:distinct_color_count]
+        ]
+        overflow_count = max(0, len(ranked_legend_contigs) - distinct_color_count)
+        remainder_count = sum(
+            contig.source_count
+            for contig in legend_subject.contigs
+            if contig.is_remainder
         )
+        fallback_count = overflow_count + remainder_count
+        if fallback_count:
+            legend_entries.append(
+                (
+                    "other_contigs",
+                    f"other contigs ({fallback_count})",
+                    theme.fallback_contig,
+                )
+            )
 
     sw = max(0.010, min(0.018, 0.18 / width))
     legend_rows, legend_cell_w = _wrap_legend_entries(
@@ -535,6 +574,32 @@ def render_loom(
     )
 
     # Ribbons first, so genome blocks and colored landing zones sit above them.
+    visible_ribbon_intervals: dict[str, dict[str, list[ColorInterval]]] = {}
+
+    def add_visible_ribbon_interval(
+        *,
+        genome_name: str,
+        contig_name: str,
+        start: int,
+        end: int,
+        color: str,
+        origin: str,
+    ) -> None:
+        if end <= start:
+            return
+        visible_ribbon_intervals.setdefault(genome_name, {}).setdefault(
+            contig_name, []
+        ).append(
+            ColorInterval(
+                genome=genome_name,
+                contig=contig_name,
+                start=start,
+                end=end,
+                color=color,
+                origin=origin,
+            )
+        )
+
     if ribbon_segments is not None:
         ribbon_items = []
         for segment in ribbon_segments:
@@ -561,6 +626,22 @@ def render_loom(
         for _sort_key, segment, rx1, rx2, cx1, cx2 in sorted(
             ribbon_items, key=lambda item: item[0]
         ):
+            add_visible_ribbon_interval(
+                genome_name=segment.subject,
+                contig_name=segment.subject_contig,
+                start=segment.subject_start,
+                end=segment.subject_end,
+                color=segment.color,
+                origin=segment.origin,
+            )
+            add_visible_ribbon_interval(
+                genome_name=segment.comparison,
+                contig_name=segment.comparison_contig,
+                start=segment.comparison_start,
+                end=segment.comparison_end,
+                color=segment.color,
+                origin=segment.origin,
+            )
             path = _ribbon_path(
                 rx1,
                 rx2,
@@ -722,8 +803,30 @@ def render_loom(
                         block_h,
                         facecolor=interval.color,
                         edgecolor="none",
-                        alpha=0.94 if not is_full_color else 0.30,
+                        alpha=(
+                            0.94
+                            if not is_full_color or interval.origin != contig.name
+                            else 0.30
+                        ),
                         zorder=4,
+                    )
+                )
+            for interval in visible_ribbon_intervals.get(genome.name, {}).get(
+                contig.name, []
+            ):
+                x0 = _pos_to_x(layout, interval.start)
+                x1 = _pos_to_x(layout, interval.end)
+                if x1 <= x0:
+                    continue
+                ax.add_patch(
+                    patches.Rectangle(
+                        (x0, y - block_h / 2),
+                        x1 - x0,
+                        block_h,
+                        facecolor=interval.color,
+                        edgecolor="none",
+                        alpha=0.96,
+                        zorder=5,
                     )
                 )
 

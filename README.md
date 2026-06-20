@@ -156,6 +156,7 @@ Key options are summarized below; run `python genome_loom.py --help` for the ful
 | `--title` | No | — | Figure title override. |
 | `--min-contig-length` | No | `1000` | Discard contigs shorter than this before rendering. |
 | `--max-contigs` | No | `0` | Cap visible contig blocks per genome; `0` keeps all contigs, and `1` is rejected. |
+| `--reference-segments` | No | `0` | Split the visible reference into this many equal-length colored segments; `0` keeps standard contig-based coloring. |
 | `--min-block-length` | No | `500` | Discard short alignment blocks. |
 | `--minimap-preset` | No | `asm5` | minimap2 preset: `asm5`, `asm10`, or `asm20`. |
 | `--min-mapq` | No | `0` | Discard low-confidence alignment blocks. |
@@ -241,6 +242,7 @@ If `--reference-contigs` is used, only those named contigs from the top/referenc
   "outdir": "results",
   "views": ["overview", "reference-pairs", "neighbor"],
   "theme": "light",
+  "reference_segments": 10,
   "max_contigs": 12,
   "threads": 4
 }
@@ -281,6 +283,67 @@ By default, the figure row label for the top genome reads `reference | <name>` s
 For `all-pairs` images that do not include the reference, ribbons are colored locally from the upper genome in that selected pair because the ribbon itself no longer contains a direct reference thread. The comparison contig bars are still painted from direct reference evidence when available. The JSON render metadata records ribbon coloring as either `reference-flow` or `subject-local`, and comparison contig coloring as `reference-based` when global reference coloring is active.
 
 Reference colors are assigned by contig size, not FASTA order. The largest reference contig receives the first palette color, the next largest receives the second, and so on. Once the palette is exhausted, the remaining smaller contigs share the fallback color. That fallback color still flows through matches, but it no longer distinguishes which individual small contig contributed a given fallback thread.
+
+### Segment-Based Reference Coloring
+
+By default, reference-flow coloring is contig-based: each visible reference contig receives one color, and that color is propagated through alignments. Use `--reference-segments N` to switch to segment-based coloring instead. In this mode, the whole visible reference is divided into `N` equal-length colored intervals before reference-flow coloring is computed.
+
+Segmenting works for both single-contig and multicontig references. For a multicontig reference, the segment boundaries are computed across the concatenated visible reference length, using the displayed contig order. A segment can therefore end on one contig and continue on the next; genome-loom records and renders that as separate per-contig intervals with the same segment label and color.
+
+For example, this command renders a neighbor-chain figure where a single complete reference chromosome is divided into ten colored segments:
+
+```bash
+python genome_loom.py \
+  --reference examples/case_studies/ecoli_complete_reference/reference.fasta \
+  --comparisons examples/case_studies/ecoli_complete_reference/comparisons/ \
+  --outdir results-segmented \
+  --views neighbor \
+  --theme dark \
+  --reference-segments 10 \
+  --minimap-preset asm10 \
+  --threads 4 \
+  --force
+```
+
+The segment colors behave like reference contig colors everywhere else in the figure set:
+
+- The top reference row is painted as `segment 1`, `segment 2`, and so on from left to right.
+- On multicontig references, segment labels continue across contig boundaries in displayed reference order.
+- Alignment blocks that cross segment boundaries are split at those boundaries before colors are propagated.
+- Ribbons use the color of the reference segment that contributed each aligned interval.
+- Comparison contig bars receive propagated segment colors where direct reference-alignment evidence supports them.
+- In `neighbor`, segment colors can continue to move through adjacent rows, just like contig colors do.
+- The legend switches from contig names to segment labels so the color key matches the segmented reference row.
+
+This example renders a fragmented, multicontig reference using twelve equal-length reference segments instead of contig colors:
+
+```bash
+python genome_loom.py \
+  --reference examples/case_studies/fragmented_reference/reference.fasta \
+  --comparisons examples/case_studies/fragmented_reference/comparisons/ \
+  --outdir fragmented-segments \
+  --views overview neighbor \
+  --theme dark \
+  --reference-segments 12 \
+  --max-contigs 0 \
+  --minimap-preset asm10 \
+  --threads 4 \
+  --force
+```
+
+If you want to segment only one contig from a multicontig reference, first select it explicitly:
+
+```bash
+python genome_loom.py \
+  --reference assembly.fasta \
+  --reference-contigs chromosome \
+  --comparisons comparisons/ \
+  --outdir chromosome-segments \
+  --views overview neighbor \
+  --reference-segments 12
+```
+
+`--reference-segments 0` disables segmentation. `--reference-segments 1` is rejected because it would be visually equivalent to ordinary single-contig coloring. Segment counts greater than the built-in palette size are allowed; colors cycle after the available distinct palette colors have been used.
 
 ## Contig Capping and Fragmented Assemblies
 

@@ -1,15 +1,17 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-04-16T19:57:54.725826+00:00",
-  "version": "0.2.1",
+  "generated": "2026-06-20T20:15:01.562280+00:00",
+  "version": "0.3.0",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/reference.fasta",
     "comparisons": [
       "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002589795_1.fasta",
       "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002011945_1.fasta",
       "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/fragmented_reference/comparisons/GCF_002854065_1.fasta"
-    ]
+    ],
+    "reference_contigs": null,
+    "reference_segments": null
   },
   "outputs": {
     "outdir": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference",
@@ -47,7 +49,9 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["reference"],
+          "colored_subjects": [
+            "reference"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
@@ -72,7 +76,9 @@
         "view": "reference-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/reference_pairs/reference-vs-GCF_002589795_1.png",
         "subject": "reference",
-        "comparisons": ["GCF_002589795_1"],
+        "comparisons": [
+          "GCF_002589795_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -94,12 +100,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["reference"],
+          "colored_subjects": [
+            "reference"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["reference", "GCF_002589795_1"],
+          "row_order": [
+            "reference",
+            "GCF_002589795_1"
+          ],
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -114,7 +125,9 @@
         "view": "reference-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/reference_pairs/reference-vs-GCF_002011945_1.png",
         "subject": "reference",
-        "comparisons": ["GCF_002011945_1"],
+        "comparisons": [
+          "GCF_002011945_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -136,12 +149,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["reference"],
+          "colored_subjects": [
+            "reference"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["reference", "GCF_002011945_1"],
+          "row_order": [
+            "reference",
+            "GCF_002011945_1"
+          ],
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -156,7 +174,9 @@
         "view": "reference-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/reference_pairs/reference-vs-GCF_002854065_1.png",
         "subject": "reference",
-        "comparisons": ["GCF_002854065_1"],
+        "comparisons": [
+          "GCF_002854065_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -178,12 +198,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["reference"],
+          "colored_subjects": [
+            "reference"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["reference", "GCF_002854065_1"],
+          "row_order": [
+            "reference",
+            "GCF_002854065_1"
+          ],
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -198,7 +223,9 @@
         "view": "all-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/all_pairs/reference-vs-GCF_002589795_1.png",
         "subject": "reference",
-        "comparisons": ["GCF_002589795_1"],
+        "comparisons": [
+          "GCF_002589795_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -220,12 +247,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["reference"],
+          "colored_subjects": [
+            "reference"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["reference", "GCF_002589795_1"],
+          "row_order": [
+            "reference",
+            "GCF_002589795_1"
+          ],
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -240,7 +272,9 @@
         "view": "all-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/all_pairs/reference-vs-GCF_002011945_1.png",
         "subject": "reference",
-        "comparisons": ["GCF_002011945_1"],
+        "comparisons": [
+          "GCF_002011945_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -262,12 +296,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["reference"],
+          "colored_subjects": [
+            "reference"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["reference", "GCF_002011945_1"],
+          "row_order": [
+            "reference",
+            "GCF_002011945_1"
+          ],
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -282,7 +321,9 @@
         "view": "all-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/all_pairs/reference-vs-GCF_002854065_1.png",
         "subject": "reference",
-        "comparisons": ["GCF_002854065_1"],
+        "comparisons": [
+          "GCF_002854065_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "reference": {
@@ -304,12 +345,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["reference"],
+          "colored_subjects": [
+            "reference"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["reference", "GCF_002854065_1"],
+          "row_order": [
+            "reference",
+            "GCF_002854065_1"
+          ],
           "theme": "light",
           "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
@@ -324,7 +370,9 @@
         "view": "all-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/all_pairs/GCF_002589795_1-vs-GCF_002011945_1.png",
         "subject": "GCF_002589795_1",
-        "comparisons": ["GCF_002011945_1"],
+        "comparisons": [
+          "GCF_002011945_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "GCF_002589795_1": {
@@ -346,12 +394,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["GCF_002589795_1"],
+          "colored_subjects": [
+            "GCF_002589795_1"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["GCF_002589795_1", "GCF_002011945_1"],
+          "row_order": [
+            "GCF_002589795_1",
+            "GCF_002011945_1"
+          ],
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
@@ -366,7 +419,9 @@
         "view": "all-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/all_pairs/GCF_002589795_1-vs-GCF_002854065_1.png",
         "subject": "GCF_002589795_1",
-        "comparisons": ["GCF_002854065_1"],
+        "comparisons": [
+          "GCF_002854065_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "GCF_002589795_1": {
@@ -388,12 +443,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["GCF_002589795_1"],
+          "colored_subjects": [
+            "GCF_002589795_1"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["GCF_002589795_1", "GCF_002854065_1"],
+          "row_order": [
+            "GCF_002589795_1",
+            "GCF_002854065_1"
+          ],
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
@@ -408,7 +468,9 @@
         "view": "all-pairs",
         "path": "/Users/paulstothard/paulstothard/genome-loom/examples/output/fragmented_reference/all_pairs/GCF_002011945_1-vs-GCF_002854065_1.png",
         "subject": "GCF_002011945_1",
-        "comparisons": ["GCF_002854065_1"],
+        "comparisons": [
+          "GCF_002854065_1"
+        ],
         "render": {
           "subject_contig_colors": {
             "GCF_002011945_1": {
@@ -430,12 +492,17 @@
           },
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
-          "colored_subjects": ["GCF_002011945_1"],
+          "colored_subjects": [
+            "GCF_002011945_1"
+          ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
           "legend_rows": 1,
           "scale_bar_bp": 2000000,
-          "row_order": ["GCF_002011945_1", "GCF_002854065_1"],
+          "row_order": [
+            "GCF_002011945_1",
+            "GCF_002854065_1"
+          ],
           "theme": "light",
           "thread_mode": "subject-local",
           "color_assignment": "largest-contigs-first",
@@ -464,22 +531,6 @@
               "NZ_CP032880.1": "#CC79A7",
               "NZ_CP032891.1": "#C9B000",
               "remaining_contigs_8": "#b8b8b8"
-            },
-            "GCF_002589795_1": {
-              "NZ_CP023899.1": "#0072B2",
-              "NZ_CP023903.1": "#D55E00",
-              "NZ_CP023895.1": "#009E73",
-              "NZ_CP023896.1": "#CC79A7",
-              "NZ_CP023897.1": "#C9B000",
-              "remaining_contigs_6": "#b8b8b8"
-            },
-            "GCF_002011945_1": {
-              "NZ_CP018948.1": "#0072B2",
-              "NZ_CP018947.1": "#D55E00",
-              "NZ_CP018946.1": "#009E73",
-              "NZ_CP018945.1": "#CC79A7",
-              "NZ_CP018944.1": "#C9B000",
-              "remaining_contigs_4": "#b8b8b8"
             }
           },
           "legend_contig_colors": {
@@ -493,9 +544,7 @@
           "legend_subject": "reference",
           "legend_note": "Reference-based colors propagated from reference to comparison contigs using sequence alignments.",
           "colored_subjects": [
-            "reference",
-            "GCF_002589795_1",
-            "GCF_002011945_1"
+            "reference"
           ],
           "distinct_subject_contig_colors": 5,
           "fallback_subject_contigs": 8,
@@ -508,26 +557,35 @@
             "GCF_002854065_1"
           ],
           "theme": "light",
-          "thread_mode": "subject-local",
+          "thread_mode": "reference-flow",
           "color_assignment": "largest-contigs-first",
           "comparison_contig_coloring": "reference-based",
           "coloring_explanation": {
             "comparison_contigs": "Comparison contigs are painted from their relationship to the true project reference.",
-            "ribbons": "Ribbons use the upper genome's reference-based painted color in the aligned region, and fall back to the neutral comparison color when that upper region has no reference-based paint."
+            "ribbons": "Ribbons use reference-flow coloring propagated from the true project reference."
           }
         }
       }
     ]
   },
   "settings": {
-    "views": ["overview", "reference-pairs", "all-pairs", "neighbor"],
+    "views": [
+      "overview",
+      "reference-pairs",
+      "all-pairs",
+      "neighbor"
+    ],
     "format": "png",
     "theme": "light",
+    "reference_role_label": "reference",
+    "reference_segments": null,
     "width": 13.0,
     "height": 8.0,
     "dpi": 180
   },
   "filters": {
+    "reference_contigs": null,
+    "reference_segments": null,
     "min_contig_length": 1000,
     "max_contigs": 6,
     "min_block_length": 5000,
