@@ -63,6 +63,31 @@ def test_reference_segments_can_be_loaded_from_config(tmp_path: Path) -> None:
     assert args.reference_segments == 4
 
 
+def test_reference_palette_can_be_loaded_from_config(tmp_path: Path) -> None:
+    reference = tmp_path / "reference.fasta"
+    comparison = tmp_path / "comparison.fasta"
+    write_fasta(reference, [("chr", "ACGT")])
+    write_fasta(comparison, [("comp1", "ACGT")])
+
+    config = tmp_path / "run.json"
+    config.write_text(
+        json.dumps(
+            {
+                "reference": str(reference),
+                "reference_palette": "continuous",
+                "comparisons": [str(comparison)],
+                "outdir": str(tmp_path / "results"),
+                "views": ["overview"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    args = _parse_args(build_parser(), ["--config", str(config)])
+    assert args.reference == reference
+    assert args.reference_palette == "continuous"
+
+
 def test_genome_order_reference_similarity_sorts_comparisons(
     monkeypatch, tmp_path: Path
 ) -> None:
@@ -135,6 +160,138 @@ def test_genome_order_reference_similarity_sorts_comparisons(
         {"name": "high", "ani": 0.99},
         {"name": "middle", "ani": 0.95},
         {"name": "low", "ani": 0.8},
+    ]
+
+
+def test_continuous_reference_palette_uses_dark_theme_colors(
+    monkeypatch, tmp_path: Path
+) -> None:
+    reference = tmp_path / "reference.fasta"
+    comparison = tmp_path / "comparison.fasta"
+    write_fasta(reference, [("chr", "ACGTACGT")])
+    write_fasta(comparison, [("comp1", "ACGTACGT")])
+
+    monkeypatch.setattr(
+        "genome_loom.run_minimap2",
+        lambda reference_fasta, comparison_fasta, **kwargs: PairwiseAlignment(
+            reference=reference_fasta,
+            comparison=comparison_fasta,
+            blocks=[],
+            aligned_bases=8,
+            matching_bases=8,
+            ani=1.0,
+        ),
+    )
+
+    captured = {}
+
+    def fake_render(**kwargs):
+        captured["color_intervals"] = kwargs["color_intervals"]
+        captured["color_palette_name"] = kwargs["color_palette_name"]
+        return {"figure_path": str(kwargs["output"]), "view": "overview"}
+
+    monkeypatch.setattr("scripts.render.render_loom", fake_render)
+
+    outdir = tmp_path / "results"
+    exit_code = main(
+        [
+            "--reference",
+            str(reference),
+            "--reference-segments",
+            "4",
+            "--reference-palette",
+            "continuous",
+            "--theme",
+            "dark",
+            "--comparisons",
+            str(comparison),
+            "--outdir",
+            str(outdir),
+            "--views",
+            "overview",
+            "--min-contig-length",
+            "0",
+        ]
+    )
+    assert exit_code == 0
+
+    intervals = captured["color_intervals"]["reference"]["chr"]
+    assert captured["color_palette_name"] == "continuous"
+    assert [interval.color for interval in intervals] == [
+        "#e5fff7",
+        "#cdf8ef",
+        "#b2efe8",
+        "#95e3e0",
+    ]
+
+    summary = json.loads((outdir / "genome-loom.summary.json").read_text())
+    assert summary["inputs"]["reference_palette"] == "continuous"
+    assert summary["settings"]["reference_palette"] == "continuous"
+
+
+def test_continuous_reference_palette_colors_contigs_in_display_order(
+    monkeypatch, tmp_path: Path
+) -> None:
+    reference = tmp_path / "reference.fasta"
+    comparison = tmp_path / "comparison.fasta"
+    write_fasta(
+        reference,
+        [
+            ("first_small", "ACGT"),
+            ("second_large", "ACGTACGTACGT"),
+            ("third_medium", "ACGTACGT"),
+        ],
+    )
+    write_fasta(comparison, [("comp1", "ACGTACGT")])
+
+    monkeypatch.setattr(
+        "genome_loom.run_minimap2",
+        lambda reference_fasta, comparison_fasta, **kwargs: PairwiseAlignment(
+            reference=reference_fasta,
+            comparison=comparison_fasta,
+            blocks=[],
+            aligned_bases=0,
+            matching_bases=0,
+            ani=0.0,
+        ),
+    )
+
+    captured = {}
+
+    def fake_render(**kwargs):
+        captured["color_intervals"] = kwargs["color_intervals"]
+        captured["color_palette_name"] = kwargs["color_palette_name"]
+        return {"figure_path": str(kwargs["output"]), "view": "overview"}
+
+    monkeypatch.setattr("scripts.render.render_loom", fake_render)
+
+    exit_code = main(
+        [
+            "--reference",
+            str(reference),
+            "--reference-palette",
+            "continuous",
+            "--theme",
+            "light",
+            "--comparisons",
+            str(comparison),
+            "--outdir",
+            str(tmp_path / "results"),
+            "--views",
+            "overview",
+            "--min-contig-length",
+            "0",
+        ]
+    )
+    assert exit_code == 0
+
+    intervals = captured["color_intervals"]["reference"]
+    assert captured["color_palette_name"] == "continuous"
+    assert list(intervals) == ["first_small", "second_large", "third_medium"]
+    assert [values[0].color for values in intervals.values()] == [
+        "#08306B",
+        "#0B559F",
+        "#1379B5",
     ]
 
 

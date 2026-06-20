@@ -27,6 +27,7 @@ VERSION = "0.4.0"
 VIEW_CHOICES = ("overview", "reference-pairs", "all-pairs", "neighbor")
 MINIMAP2_PRESETS = ("asm5", "asm10", "asm20")
 GENOME_ORDER_CHOICES = ("input", "reference-similarity")
+REFERENCE_PALETTE_CHOICES = ("categorical", "continuous")
 FULL_STACK_VIEWS = {"overview", "neighbor"}
 
 
@@ -432,6 +433,16 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--reference-palette",
+        choices=REFERENCE_PALETTE_CHOICES,
+        default="categorical",
+        help=(
+            "Color palette for reference contigs or reference segments. "
+            "categorical uses distinct colors; continuous uses a theme-specific "
+            "ordered gradient so neighboring contigs or segments have related colors."
+        ),
+    )
+    parser.add_argument(
         "--min-block-length",
         type=_nonnegative_int,
         default=500,
@@ -516,6 +527,7 @@ def _render_one(
     theme: str,
     actual_reference: Genome | None = None,
     reference_role_label: str | None = "reference",
+    color_palette_name: str = "categorical",
 ) -> dict:
     from scripts.render import render_loom
 
@@ -537,6 +549,7 @@ def _render_one(
         legend_genome=legend_genome,
         actual_reference=actual_reference,
         reference_role_label=reference_role_label,
+        color_palette_name=color_palette_name,
     )
 
 
@@ -724,7 +737,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Warning: {warnings[-1]}", file=sys.stderr)
 
         from scripts.render import RibbonLayer
-        from scripts.render import ColorInterval, DEFAULT_COLORS, THEMES, RibbonSegment
+        from scripts.render import (
+            ColorInterval,
+            THEMES,
+            RibbonSegment,
+            color_palette_for_theme,
+        )
 
         def make_layer(subject_path: Path, comparison_path: Path) -> RibbonLayer:
             return RibbonLayer(
@@ -743,13 +761,25 @@ def main(argv: list[str] | None = None) -> int:
                 key=lambda item: (-item[1].length, item[0]),
             )
 
+        def reference_color_contigs(genome: Genome):
+            if args.reference_palette == "continuous":
+                return [
+                    item
+                    for item in enumerate(genome.contigs)
+                    if not item[1].is_remainder
+                ]
+            return ranked_contigs_by_size(genome)
+
         theme_fallback = THEMES[args.theme].fallback_contig
+        reference_palette = color_palette_for_theme(args.reference_palette, args.theme)
         reference_colors = {}
         for rank, (_original_index, contig) in enumerate(
-            ranked_contigs_by_size(reference)
+            reference_color_contigs(reference)
         ):
             reference_colors[contig.name] = (
-                DEFAULT_COLORS[rank] if rank < len(DEFAULT_COLORS) else theme_fallback
+                reference_palette[rank]
+                if rank < len(reference_palette)
+                else theme_fallback
             )
         for contig in reference.contigs:
             if contig.is_remainder:
@@ -763,7 +793,7 @@ def main(argv: list[str] | None = None) -> int:
                 for interval in _reference_segment_intervals(
                     reference=reference,
                     segment_count=applied_reference_segments,
-                    colors=DEFAULT_COLORS,
+                    colors=reference_palette,
                 ):
                     color_interval = ColorInterval(**interval)
                     segmented[reference.name].setdefault(
@@ -994,6 +1024,7 @@ def main(argv: list[str] | None = None) -> int:
                 theme=args.theme,
                 actual_reference=reference,
                 reference_role_label=reference_role_label or None,
+                color_palette_name=args.reference_palette,
             )
             record("overview", args.output, meta, reference, comparison_genomes)
         else:
@@ -1023,6 +1054,7 @@ def main(argv: list[str] | None = None) -> int:
                     theme=args.theme,
                     actual_reference=reference,
                     reference_role_label=reference_role_label or None,
+                    color_palette_name=args.reference_palette,
                 )
                 record("overview", output, meta, reference, comparison_genomes)
 
@@ -1055,6 +1087,7 @@ def main(argv: list[str] | None = None) -> int:
                         theme=args.theme,
                         actual_reference=reference,
                         reference_role_label=reference_role_label or None,
+                        color_palette_name=args.reference_palette,
                     )
                     record("reference-pairs", output, meta, reference, [genome])
 
@@ -1090,6 +1123,7 @@ def main(argv: list[str] | None = None) -> int:
                             theme=args.theme,
                             actual_reference=reference,
                             reference_role_label=reference_role_label or None,
+                            color_palette_name=args.reference_palette,
                         )
                     else:
                         layers = [make_layer(a_path, b_path)]
@@ -1111,6 +1145,7 @@ def main(argv: list[str] | None = None) -> int:
                             theme=args.theme,
                             actual_reference=reference,
                             reference_role_label=reference_role_label or None,
+                            color_palette_name=args.reference_palette,
                         )
                     record("all-pairs", output, meta, subject, [comp])
 
@@ -1138,6 +1173,7 @@ def main(argv: list[str] | None = None) -> int:
                     theme=args.theme,
                     actual_reference=reference,
                     reference_role_label=reference_role_label or None,
+                    color_palette_name=args.reference_palette,
                 )
                 record("neighbor", output, meta, reference, ordered_genomes[1:])
 
@@ -1150,6 +1186,7 @@ def main(argv: list[str] | None = None) -> int:
                     "comparisons": [str(p) for p in comparison_paths],
                     "reference_contigs": selected_reference_contigs or None,
                     "reference_segments": args.reference_segments or None,
+                    "reference_palette": args.reference_palette,
                 },
                 "outputs": {
                     "outdir": str(outdir),
@@ -1165,6 +1202,7 @@ def main(argv: list[str] | None = None) -> int:
                     "format": args.format,
                     "theme": args.theme,
                     "genome_order": args.genome_order,
+                    "reference_palette": args.reference_palette,
                     "reference_role_label": reference_role_label or None,
                     "reference_segments": applied_reference_segments,
                     "width": args.width,

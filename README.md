@@ -123,6 +123,16 @@ python genome_loom.py \
   --views overview neighbor \
   --genome-order reference-similarity
 
+# Use continuous reference colors so neighboring segments have related colors
+python genome_loom.py \
+  --reference ref.fasta \
+  --comparisons comparisons/ \
+  --outdir continuous-color-results \
+  --views neighbor \
+  --reference-segments 12 \
+  --reference-palette continuous \
+  --theme dark
+
 # Focus the figure on selected top/reference contigs
 python genome_loom.py \
   --reference assembly.fasta \
@@ -170,6 +180,7 @@ Key options are summarized below; run `python genome_loom.py --help` for the ful
 | `--min-contig-length` | No | `1000` | Discard contigs shorter than this before rendering. |
 | `--max-contigs` | No | `0` | Cap visible contig blocks per genome; `0` keeps all contigs, and `1` is rejected. |
 | `--reference-segments` | No | `0` | Split the visible reference into this many equal-length colored segments; `0` keeps standard contig-based coloring. |
+| `--reference-palette` | No | `categorical` | Color palette for reference contigs or segments: `categorical` uses distinct colors; `continuous` uses a theme-specific ordered gradient so neighboring contigs or segments have related colors. |
 | `--min-block-length` | No | `500` | Discard short alignment blocks. |
 | `--minimap-preset` | No | `asm5` | minimap2 preset: `asm5`, `asm10`, or `asm20`. |
 | `--min-mapq` | No | `0` | Discard low-confidence alignment blocks. |
@@ -256,6 +267,7 @@ If `--reference-contigs` is used, only those named contigs from the top/referenc
   "views": ["overview", "reference-pairs", "neighbor"],
   "theme": "light",
   "reference_segments": 10,
+  "reference_palette": "continuous",
   "max_contigs": 12,
   "threads": 4
 }
@@ -323,11 +335,15 @@ By default, the figure row label for the top genome reads `reference | <name>` s
 
 For `all-pairs` images that do not include the reference, ribbons are colored locally from the upper genome in that selected pair because the ribbon itself no longer contains a direct reference thread. The comparison contig bars are still painted from direct reference evidence when available. The JSON render metadata records ribbon coloring as either `reference-flow` or `subject-local`, and comparison contig coloring as `reference-based` when global reference coloring is active.
 
-Reference colors are assigned by contig size, not FASTA order. The largest reference contig receives the first palette color, the next largest receives the second, and so on. Once the palette is exhausted, the remaining smaller contigs share the fallback color. That fallback color still flows through matches, but it no longer distinguishes which individual small contig contributed a given fallback thread.
+With the default `--reference-palette categorical`, reference colors are assigned by contig size, not FASTA order. The largest reference contig receives the first palette color, the next largest receives the second, and so on. Once the palette is exhausted, the remaining smaller contigs share the fallback color. That fallback color still flows through matches, but it no longer distinguishes which individual small contig contributed a given fallback thread.
+
+With `--reference-palette continuous`, contig-based reference colors are assigned in displayed reference order instead. This makes neighboring reference contigs use related colors, which can be helpful when the figure should read as an ordered structure rather than as a set of maximally distinct categories.
 
 ### Segment-Based Reference Coloring
 
 By default, reference-flow coloring is contig-based: each visible reference contig receives one color, and that color is propagated through alignments. Use `--reference-segments N` to switch to segment-based coloring instead. In this mode, the whole visible reference is divided into `N` equal-length colored intervals before reference-flow coloring is computed.
+
+The default `--reference-palette categorical` assigns visually distinct colors. Use `--reference-palette continuous` when the reference should read more like an ordered color ramp: neighboring reference contigs or segments receive related colors, and those related colors propagate through ribbons and comparison bars. The continuous palette is theme-specific, with a darker, luminous palette for `--theme dark` and a stronger high-contrast palette for `--theme light`.
 
 Segmenting works for both single-contig and multicontig references. For a multicontig reference, the segment boundaries are computed across the concatenated visible reference length, using the displayed contig order. A segment can therefore end on one contig and continue on the next; genome-loom records and renders that as separate per-contig intervals with the same segment label and color.
 
@@ -341,6 +357,7 @@ python genome_loom.py \
   --views neighbor \
   --theme dark \
   --reference-segments 10 \
+  --reference-palette continuous \
   --minimap-preset asm10 \
   --threads 4 \
   --force
@@ -366,6 +383,7 @@ python genome_loom.py \
   --views overview neighbor \
   --theme dark \
   --reference-segments 12 \
+  --reference-palette continuous \
   --max-contigs 0 \
   --minimap-preset asm10 \
   --threads 4 \
@@ -384,7 +402,7 @@ python genome_loom.py \
   --reference-segments 12
 ```
 
-`--reference-segments 0` disables segmentation. `--reference-segments 1` is rejected because it would be visually equivalent to ordinary single-contig coloring. Segment counts greater than the built-in palette size are allowed; colors cycle after the available distinct palette colors have been used.
+`--reference-segments 0` disables segmentation. `--reference-segments 1` is rejected because it would be visually equivalent to ordinary single-contig coloring. Segment counts greater than the built-in palette size are allowed; colors cycle after the selected palette colors have been used.
 
 ## Contig Capping and Fragmented Assemblies
 

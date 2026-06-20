@@ -32,6 +32,45 @@ DEFAULT_COLORS = [
     "#FB9A99",
     "#8DD3C7",
 ]
+CONTINUOUS_LIGHT_COLORS = [
+    "#08306B",
+    "#0B559F",
+    "#1379B5",
+    "#1E9AC0",
+    "#35B7C3",
+    "#5DCCBF",
+    "#8ADFB6",
+    "#B7E7A1",
+    "#E4E38A",
+    "#F6C871",
+    "#F2A35E",
+    "#DF7A55",
+    "#C4525C",
+    "#9B3E67",
+    "#713665",
+    "#4D2C59",
+    "#2F2144",
+]
+CONTINUOUS_DARK_COLORS = [
+    "#e5fff7",
+    "#cdf8ef",
+    "#b2efe8",
+    "#95e3e0",
+    "#78d3d6",
+    "#5bbfca",
+    "#42a8bc",
+    "#2e8ead",
+    "#26759e",
+    "#285e8d",
+    "#2d4a79",
+    "#343a63",
+    "#433254",
+    "#5a3a5b",
+    "#744b65",
+    "#95636f",
+    "#bd8378",
+]
+COLOR_PALETTE_CHOICES = ("categorical", "continuous")
 FALLBACK_CONTIG_COLOR = "#b8b8b8"
 ENABLE_RIBBON_OUTLINES = False
 
@@ -170,6 +209,21 @@ def _text_width_frac(text: str, fontsize_pts: float, width_in: float) -> float:
     return len(text) * fontsize_pts * 0.56 / 72.0 / width_in
 
 
+def color_palette_for_theme(palette_name: str, theme_name: str) -> list[str]:
+    if palette_name == "categorical":
+        return DEFAULT_COLORS
+    if palette_name == "continuous":
+        return (
+            CONTINUOUS_DARK_COLORS
+            if theme_name == "dark"
+            else CONTINUOUS_LIGHT_COLORS
+        )
+    raise ValueError(
+        f"Unknown color palette '{palette_name}'. "
+        f"Choose from: {', '.join(COLOR_PALETTE_CHOICES)}"
+    )
+
+
 def _wrap_legend_entries(
     entries: list[tuple[str, str, str]],
     *,
@@ -202,12 +256,12 @@ def _ranked_contigs_by_size(genome: Genome):
     )
 
 
-def _contig_colors_by_size(genome: Genome, fallback_color: str) -> dict[str, str]:
+def _contig_colors_by_size(
+    genome: Genome, fallback_color: str, palette: list[str]
+) -> dict[str, str]:
     colors: dict[str, str] = {}
     for rank, (_original_index, contig) in enumerate(_ranked_contigs_by_size(genome)):
-        colors[contig.name] = (
-            DEFAULT_COLORS[rank] if rank < len(DEFAULT_COLORS) else fallback_color
-        )
+        colors[contig.name] = palette[rank] if rank < len(palette) else fallback_color
     for contig in genome.contigs:
         if contig.is_remainder:
             colors[contig.name] = fallback_color
@@ -391,6 +445,7 @@ def render_loom(
     legend_genome: Genome | None = None,
     actual_reference: Genome | None = None,
     reference_role_label: str | None = "reference",
+    color_palette_name: str = "categorical",
 ) -> dict:
     """Render a stacked subject-to-comparison ribbon plot."""
     theme = THEMES.get(theme_name)
@@ -398,6 +453,7 @@ def render_loom(
         raise ValueError(
             f"Unknown theme '{theme_name}'. Choose from: {', '.join(THEMES)}"
         )
+    color_palette = color_palette_for_theme(color_palette_name, theme_name)
 
     genomes = (
         context_genomes if context_genomes is not None else [reference, *comparisons]
@@ -472,7 +528,7 @@ def render_loom(
     subject_colors: dict[str, dict[str, str]] = {}
     for subject in subjects:
         subject_colors[subject.name] = _contig_colors_by_size(
-            subject, theme.fallback_contig
+            subject, theme.fallback_contig, color_palette
         )
 
     legend_subject = legend_genome or subjects[0]
@@ -483,20 +539,25 @@ def render_loom(
                 break
     legend_colors = subject_colors.get(legend_subject.name)
     if legend_colors is None:
-        legend_colors = _contig_colors_by_size(legend_subject, theme.fallback_contig)
+        legend_colors = _contig_colors_by_size(
+            legend_subject, theme.fallback_contig, color_palette
+        )
     interval_legend_entries = _legend_entries_from_intervals(
         legend_subject, color_intervals
     )
-    if interval_legend_entries and any(
-        raw_label not in {contig.name for contig in legend_subject.contigs}
-        for raw_label, _display_label, _color in interval_legend_entries
+    if interval_legend_entries and (
+        color_palette_name == "continuous"
+        or any(
+            raw_label not in {contig.name for contig in legend_subject.contigs}
+            for raw_label, _display_label, _color in interval_legend_entries
+        )
     ):
         legend_entries = interval_legend_entries
         distinct_color_count = len(legend_entries)
         fallback_count = 0
     else:
         ranked_legend_contigs = _ranked_contigs_by_size(legend_subject)
-        distinct_color_count = min(len(ranked_legend_contigs), len(DEFAULT_COLORS))
+        distinct_color_count = min(len(ranked_legend_contigs), len(color_palette))
         legend_entries = [
             (contig.name, _shorten(contig.name, 24), legend_colors[contig.name])
             for _original_index, contig in ranked_legend_contigs[:distinct_color_count]
@@ -837,10 +898,16 @@ def render_loom(
         "scale_bar_bp": scale_bp,
         "row_order": [g.name for g in genomes],
         "theme": theme.name,
+        "color_palette": color_palette_name,
+        "palette_colors": color_palette,
         "thread_mode": (
             "reference-flow" if ribbon_segments is not None else "subject-local"
         ),
-        "color_assignment": "largest-contigs-first",
+        "color_assignment": (
+            "display-order-continuous"
+            if color_palette_name == "continuous" and color_intervals
+            else "largest-contigs-first"
+        ),
         "comparison_contig_coloring": (
             "reference-based" if color_intervals else "neutral"
         ),
