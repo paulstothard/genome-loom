@@ -1,8 +1,8 @@
 {
   "status": "success",
   "tool": "genome-loom",
-  "generated": "2026-06-20T21:37:44.647290+00:00",
-  "version": "0.3.0",
+  "generated": "2026-06-20T21:40:14.037888+00:00",
+  "version": "0.3.1",
   "inputs": {
     "reference": "/Users/paulstothard/paulstothard/genome-loom/examples/case_studies/ecoli_complete_reference/reference.fasta",
     "comparisons": [
